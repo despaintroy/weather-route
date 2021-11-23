@@ -3,13 +3,22 @@ import 'sass/index.scss'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import App from './App'
+import theme from 'theme'
+import SignIn from 'ts/components/SignIn'
+
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
+
 import reportWebVitals from './reportWebVitals'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			{/* <App /> */}
+			<SignIn />
+		</ThemeProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
 )
