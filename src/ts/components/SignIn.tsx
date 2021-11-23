@@ -1,27 +1,39 @@
 import * as React from 'react'
 
-import Copyright from 'ts/components/Copyright'
+import { signIn } from 'ts/services/auth'
+import { getMessage } from 'ts/services/errors'
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { Alert, CircularProgress } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 export default function SignIn(): React.ReactElement {
+	const [errorText, setErrorText] = React.useState('')
+	const [isLoading, setIsLoading] = React.useState(false)
+
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
 		event.preventDefault()
+		setErrorText('')
+
 		const data = new FormData(event.currentTarget)
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-		})
+		const email = data.get('email')?.toString()
+		const password = data.get('password')?.toString()
+
+		if (!email || !password) {
+			setErrorText('Please enter an email and password.')
+			return
+		}
+
+		setIsLoading(true)
+		signIn(email, password)
+			.catch(e => setErrorText(getMessage(e)))
+			.finally(() => setIsLoading(false))
 	}
 
 	return (
@@ -61,33 +73,37 @@ export default function SignIn(): React.ReactElement {
 						id='password'
 						autoComplete='current-password'
 					/>
-					<FormControlLabel
-						control={<Checkbox value='remember' color='primary' />}
-						label='Remember me'
-					/>
+					{errorText && (
+						<Alert sx={{ mt: 2 }} severity='error'>
+							{errorText}
+						</Alert>
+					)}
 					<Button
 						type='submit'
 						fullWidth
 						variant='contained'
-						sx={{ mt: 3, mb: 2 }}
+						sx={{ mt: 2, mb: 2 }}
 					>
-						Sign In
+						{isLoading ? (
+							<CircularProgress size={24} color='inherit' />
+						) : (
+							'Sign In'
+						)}
 					</Button>
 					<Grid container>
 						<Grid item xs>
-							<Link href='#' variant='body2'>
-								Forgot password?
-							</Link>
+							{/* <Link href='#' variant='body2'>
+								{"Don't have an account? Sign Up"}
+							</Link> */}
 						</Grid>
 						<Grid item>
-							<Link href='#' variant='body2'>
-								{"Don't have an account? Sign Up"}
-							</Link>
+							{/* <Link href='#' variant='body2'>
+								Forgot password?
+							</Link> */}
 						</Grid>
 					</Grid>
 				</Box>
 			</Box>
-			<Copyright sx={{ mt: 8, mb: 4 }} />
 		</Container>
 	)
 }
