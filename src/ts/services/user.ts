@@ -33,9 +33,7 @@ export const signUp = (
 	name?: string
 ): Promise<void> =>
 	createUserWithEmailAndPassword(auth, email, password).then(credential =>
-		updateProfile(credential.user, { displayName: name }).then(() =>
-			Promise.resolve()
-		)
+		updateProfile(credential.user, { displayName: name })
 	)
 
 // --------------------------------------------------
@@ -48,18 +46,15 @@ export const getUser = (): User | null => formatUser(auth.currentUser)
 //   PATCH
 // --------------------------------------------------
 
-export const updateName = (name: string): Promise<void> => {
-	if (auth.currentUser)
-		return updateProfile(auth.currentUser, { displayName: name })
-	return Promise.reject()
-}
+export const updateName = (name: string): Promise<void> =>
+	auth.currentUser
+		? updateProfile(auth.currentUser, { displayName: name })
+		: Promise.reject()
 
-export const updateEmail = (email: string): Promise<void> => {
-	if (auth.currentUser) return updateFireEmail(auth.currentUser, email)
-	return Promise.reject()
-}
+export const updateEmail = (email: string): Promise<void> =>
+	auth.currentUser ? updateFireEmail(auth.currentUser, email) : Promise.reject()
 
-export const updatePassword = (password: string): Promise<void> => {
-	if (auth.currentUser) return updateFirePassword(auth.currentUser, password)
-	return Promise.reject()
-}
+export const updatePassword = (password: string): Promise<void> =>
+	auth.currentUser
+		? updateFirePassword(auth.currentUser, password)
+		: Promise.reject()
