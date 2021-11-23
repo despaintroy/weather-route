@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { signIn, signUp } from 'ts/services/auth'
 import { getMessage } from 'ts/services/errors'
+import { signUp } from 'ts/services/user'
 import Paths from 'ts/utils/paths'
 
 import PersonIcon from '@mui/icons-material/Person'
@@ -23,12 +23,13 @@ export default function SignUp(): React.ReactElement {
 		setErrorText('')
 
 		const data = new FormData(event.currentTarget)
+		const name = data.get('name')?.toString()
 		const email = data.get('email')?.toString()
 		const password1 = data.get('password1')?.toString()
 		const password2 = data.get('password2')?.toString()
 
-		if (!email || !password1 || !password2) {
-			setErrorText('Please enter an email and password.')
+		if (!email || !password1 || !password2 || !name) {
+			setErrorText('Please enter your name, email, and password.')
 			return
 		}
 
@@ -38,8 +39,7 @@ export default function SignUp(): React.ReactElement {
 		}
 
 		setIsLoading(true)
-		signUp(email, password1)
-			.then(() => signIn(email, password1))
+		signUp(email, password1, name)
 			.catch(e => setErrorText(getMessage(e)))
 			.finally(() => setIsLoading(false))
 	}
@@ -65,11 +65,20 @@ export default function SignUp(): React.ReactElement {
 						margin='normal'
 						required
 						fullWidth
+						id='name'
+						label='Name'
+						name='name'
+						autoComplete='name'
+						autoFocus
+					/>
+					<TextField
+						margin='normal'
+						required
+						fullWidth
 						id='email'
 						label='Email Address'
 						name='email'
 						autoComplete='email'
-						autoFocus
 					/>
 					<TextField
 						margin='normal'

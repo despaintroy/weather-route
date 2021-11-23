@@ -13,7 +13,9 @@ function Home(): React.ReactElement {
 		<div>
 			<Container>
 				<h1>Home</h1>
-				<p>Signed in as {user.email}.</p>
+				<p>
+					Signed in as user {user.name ?? 'none'} with email {user.email}.
+				</p>
 				<Button variant='contained' onClick={signOut}>
 					Sign Out
 				</Button>

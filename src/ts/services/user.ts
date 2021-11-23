@@ -1,4 +1,5 @@
 import {
+	createUserWithEmailAndPassword,
 	updateEmail as updateFireEmail,
 	updatePassword as updateFirePassword,
 	updateProfile,
@@ -17,6 +18,21 @@ export const formatUser = (user: FireUser | null): User | null => {
 		}
 	else return null
 }
+
+// --------------------------------------------------
+//   POST
+// --------------------------------------------------
+
+export const signUp = (
+	email: string,
+	password: string,
+	name?: string
+): Promise<void> =>
+	createUserWithEmailAndPassword(auth, email, password).then(credential =>
+		updateProfile(credential.user, { displayName: name }).then(() =>
+			Promise.resolve()
+		)
+	)
 
 // --------------------------------------------------
 //   GET

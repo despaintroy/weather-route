@@ -1,5 +1,4 @@
 import {
-	createUserWithEmailAndPassword,
 	getAuth,
 	signInWithEmailAndPassword,
 	signOut as fireSignOut,
@@ -10,11 +9,6 @@ export const auth = getAuth(firebaseApp)
 
 export const signIn = (email: string, password: string): Promise<void> =>
 	signInWithEmailAndPassword(auth, email, password).then(() =>
-		Promise.resolve()
-	)
-
-export const signUp = (email: string, password: string): Promise<void> =>
-	createUserWithEmailAndPassword(auth, email, password).then(() =>
 		Promise.resolve()
 	)
 
