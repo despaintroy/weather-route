@@ -15,6 +15,10 @@ export const formatUser = (user: FireUser | null): User | null => {
 			name: user.displayName,
 			email: user.email,
 			phone: user.phoneNumber,
+			lastSignIn:
+				(user.metadata.lastSignInTime &&
+					new Date(user.metadata.lastSignInTime)) ||
+				undefined,
 		}
 	else return null
 }
