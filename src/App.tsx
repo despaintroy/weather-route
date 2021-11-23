@@ -1,5 +1,3 @@
-import 'sass/App.scss'
-
 import React, { Context, useState } from 'react'
 
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
@@ -34,6 +32,9 @@ function App(props: { user: User }): React.ReactElement {
 						</Route>
 						<Route exact path='/'>
 							<Redirect to={Paths.home} />
+						</Route>
+						<Route path='/'>
+							<Redirect to={Paths.signIn} />
 						</Route>
 					</Switch>
 				</HashRouter>

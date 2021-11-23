@@ -1,11 +1,12 @@
 import 'sass/index.scss'
+import 'sass/App.scss'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from 'App'
+import AppUnauthorized from 'AppUnauthorized'
 import theme from 'theme'
-import SignIn from 'ts/components/SignIn'
 import { auth } from 'ts/services/auth'
 import { formatUser } from 'ts/services/user'
 
@@ -33,7 +34,7 @@ auth.onAuthStateChanged(fireUser => {
 			<React.StrictMode>
 				<ThemeProvider theme={theme}>
 					<CssBaseline />
-					<SignIn />
+					<AppUnauthorized />
 				</ThemeProvider>
 			</React.StrictMode>,
 			document.getElementById('root')

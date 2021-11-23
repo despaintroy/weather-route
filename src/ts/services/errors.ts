@@ -26,4 +26,5 @@ export const ErrorMessages: FirebaseError = {
 	'auth/invalid-email': 'Email address is invalid',
 	'auth/user-not-found': 'Account does not exist for this email address',
 	'auth/wrong-password': 'Incorrect password',
+	'auth/email-already-in-use': 'An account already exists with this email',
 }

@@ -1,10 +1,10 @@
 import * as React from 'react'
 
-import { signIn } from 'ts/services/auth'
+import { signIn, signUp } from 'ts/services/auth'
 import { getMessage } from 'ts/services/errors'
 import Paths from 'ts/utils/paths'
 
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import PersonIcon from '@mui/icons-material/Person'
 import { Alert, CircularProgress, Link } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
@@ -14,7 +14,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-export default function SignIn(): React.ReactElement {
+export default function SignUp(): React.ReactElement {
 	const [errorText, setErrorText] = React.useState('')
 	const [isLoading, setIsLoading] = React.useState(false)
 
@@ -24,15 +24,22 @@ export default function SignIn(): React.ReactElement {
 
 		const data = new FormData(event.currentTarget)
 		const email = data.get('email')?.toString()
-		const password = data.get('password')?.toString()
+		const password1 = data.get('password1')?.toString()
+		const password2 = data.get('password2')?.toString()
 
-		if (!email || !password) {
+		if (!email || !password1 || !password2) {
 			setErrorText('Please enter an email and password.')
 			return
 		}
 
+		if (password1 !== password2) {
+			setErrorText('Passwords do not match.')
+			return
+		}
+
 		setIsLoading(true)
-		signIn(email, password)
+		signUp(email, password1)
+			.then(() => signIn(email, password1))
 			.catch(e => setErrorText(getMessage(e)))
 			.finally(() => setIsLoading(false))
 	}
@@ -48,10 +55,10 @@ export default function SignIn(): React.ReactElement {
 				}}
 			>
 				<Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-					<LockOutlinedIcon />
+					<PersonIcon />
 				</Avatar>
 				<Typography component='h1' variant='h5'>
-					Sign In
+					Sign Up
 				</Typography>
 				<Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
 					<TextField
@@ -68,11 +75,21 @@ export default function SignIn(): React.ReactElement {
 						margin='normal'
 						required
 						fullWidth
-						name='password'
+						name='password1'
 						label='Password'
 						type='password'
-						id='password'
-						autoComplete='current-password'
+						id='password1'
+						autoComplete='new-password'
+					/>
+					<TextField
+						margin='normal'
+						required
+						fullWidth
+						name='password2'
+						label='Confirm Password'
+						type='password'
+						id='password2'
+						autoComplete='new-password'
 					/>
 					{errorText && (
 						<Alert sx={{ mt: 2 }} severity='error'>
@@ -88,13 +105,13 @@ export default function SignIn(): React.ReactElement {
 						{isLoading ? (
 							<CircularProgress size={24} color='inherit' />
 						) : (
-							'Sign In'
+							'Sign Up'
 						)}
 					</Button>
 					<Grid container>
 						<Grid item xs>
-							<Link href={Paths.signUp} variant='body2'>
-								{"Don't have an account? Sign Up"}
+							<Link href={Paths.signIn} variant='body2'>
+								{'Already have an account? Sign In'}
 							</Link>
 						</Grid>
 						<Grid item>
