@@ -1,12 +1,34 @@
 import React from 'react'
 
-import Container from '@mui/material/Container'
+import { Box } from '@mui/system'
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
 
-export default function Home(): React.ReactElement {
+function Home(): React.ReactElement {
+	const { isLoaded } = useJsApiLoader({
+		id: 'google-map-script',
+		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY ?? '',
+	})
+
 	return (
-		<Container>
-			<h1>Home</h1>
-			<p>This is the home page</p>
-		</Container>
+		<Box height='100%'>
+			{isLoaded && (
+				<GoogleMap
+					mapContainerStyle={{
+						width: '100%',
+						height: '100%',
+					}}
+					center={{
+						lat: -3.745,
+						lng: -38.523,
+					}}
+					zoom={10}
+				>
+					{/* Child components, such as markers, info windows, etc. */}
+					<></>
+				</GoogleMap>
+			)}
+		</Box>
 	)
 }
+
+export default React.memo(Home)
