@@ -2,38 +2,99 @@ import * as React from 'react'
 
 import { signIn } from 'ts/services/auth'
 import { getMessage } from 'ts/services/errors'
+import { FormState } from 'ts/services/models'
+import { EMAIL_REGEX } from 'ts/utils/constants'
+import { prepSubmit, validateForm } from 'ts/utils/helpers'
 import Paths from 'ts/utils/paths'
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import { Alert, CircularProgress, Link } from '@mui/material'
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import {
+	Alert,
+	Avatar,
+	Box,
+	Button,
+	CircularProgress,
+	Container,
+	Grid,
+	Link,
+	TextField,
+	Typography,
+} from '@mui/material'
+
+type Fields = 'email' | 'password'
 
 export default function SignIn(): React.ReactElement {
-	const [errorText, setErrorText] = React.useState('')
 	const [isLoading, setIsLoading] = React.useState(false)
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+	const [formState, setFormState] = React.useState<FormState<Fields>>({
+		values: {
+			email: '',
+			password: '',
+		},
+		messages: {
+			email: '',
+			password: '',
+		},
+		isValid: {
+			email: false,
+			password: false,
+		},
+		touched: {
+			email: false,
+			password: false,
+		},
+		validators: {
+			email: (state: FormState<Fields>): FormState<Fields> => {
+				state.isValid.email = !!state.values.email.match(EMAIL_REGEX)
+				state.messages.email = state.isValid.email
+					? ''
+					: 'Invalid email address'
+				return { ...state }
+			},
+			password: (state: FormState<Fields>): FormState<Fields> => {
+				state.isValid.password = state.values.password.length > 0
+				state.messages.password = state.isValid.password ? '' : 'Required'
+				return { ...state }
+			},
+		},
+		formValid: false,
+		formMessage: '',
+		attemptedSubmit: false,
+	})
+
+	function handleUserInput(e: React.ChangeEvent<HTMLInputElement>): void {
+		const name = e.target.name as Fields
+		const value = e.target.value.toString()
+
+		setFormState(state => {
+			if (!state.isValid[name]) state = state.validators[name](state)
+			const fieldValues = formState.values
+			fieldValues[name] = value
+			return { ...state, values: fieldValues }
+		})
+	}
+
+	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
-		setErrorText('')
 
-		const data = new FormData(event.currentTarget)
-		const email = data.get('email')?.toString()
-		const password = data.get('password')?.toString()
+		setFormState(state => validateForm(state))
+		setFormState(state => prepSubmit(state))
 
-		if (!email || !password) {
-			setErrorText('Please enter an email and password.')
+		if (!formState.formValid) {
+			setFormState(state => {
+				return { ...state, formMessage: 'Please fix the errors in the form' }
+			})
 			return
 		}
 
 		setIsLoading(true)
-		signIn(email, password)
-			.catch(e => setErrorText(getMessage(e)))
+
+		signIn(formState.values.email, formState.values.password)
+			.catch(e =>
+				setFormState(state => {
+					return { ...state, formMessage: getMessage(e) }
+				})
+			)
 			.finally(() => setIsLoading(false))
 	}
 
@@ -63,6 +124,13 @@ export default function SignIn(): React.ReactElement {
 						name='email'
 						autoComplete='email'
 						autoFocus
+						onChange={handleUserInput}
+						onBlur={(): void => {
+							formState.touched.email = true
+							setFormState(state => validateForm(state))
+						}}
+						error={formState.touched.email && !formState.isValid.email}
+						helperText={formState.touched.email && formState.messages.email}
 					/>
 					<TextField
 						margin='normal'
@@ -73,10 +141,19 @@ export default function SignIn(): React.ReactElement {
 						type='password'
 						id='password'
 						autoComplete='current-password'
+						onChange={handleUserInput}
+						onBlur={(): void => {
+							formState.touched.password = true
+							setFormState(state => validateForm(state))
+						}}
+						error={formState.touched.password && !formState.isValid.password}
+						helperText={
+							formState.touched.password && formState.messages.password
+						}
 					/>
-					{errorText && (
+					{formState.attemptedSubmit && formState.formMessage && (
 						<Alert sx={{ mt: 2 }} severity='error'>
-							{errorText}
+							{formState.formMessage || 'Form error'}
 						</Alert>
 					)}
 					<Button
