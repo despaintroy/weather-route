@@ -33,14 +33,8 @@ function App(props: { user: User }): React.ReactElement {
 						<Route exact path={Paths.account} component={Account} />
 
 						{/* Default redirect */}
-						<Route exact path={Paths.signIn}>
-							<Redirect to={Paths.home} />
-						</Route>
-						<Route exact path='/'>
-							<Redirect to={Paths.home} />
-						</Route>
 						<Route path='/'>
-							<Redirect to={Paths.signIn} />
+							<Redirect to={Paths.home} />
 						</Route>
 					</Switch>
 				</HashRouter>
