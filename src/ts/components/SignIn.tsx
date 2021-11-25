@@ -4,7 +4,12 @@ import { signIn } from 'ts/services/auth'
 import { getMessage } from 'ts/services/errors'
 import { FormState } from 'ts/services/models'
 import { EMAIL_REGEX } from 'ts/utils/constants'
-import { prepSubmit, validateForm } from 'ts/utils/helpers'
+import {
+	beforeSubmit,
+	handleValueChange,
+	newFormState,
+	validateForm,
+} from 'ts/utils/helpers'
 import Paths from 'ts/utils/paths'
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
@@ -21,71 +26,38 @@ import {
 	Typography,
 } from '@mui/material'
 
-type Fields = 'email' | 'password'
+const fieldsArray = ['email', 'password'] as const
+type Fields = typeof fieldsArray[number]
+
+const emailValidator = (state: FormState<Fields>): FormState<Fields> => {
+	state.isValid.email = !!state.values.email.match(EMAIL_REGEX)
+	state.messages.email = state.isValid.email ? '' : 'Invalid email address'
+	return { ...state }
+}
+
+const passwordValidator = (state: FormState<Fields>): FormState<Fields> => {
+	state.isValid.password = state.values.password.length > 0
+	state.messages.password = state.isValid.password ? '' : 'Required'
+	return { ...state }
+}
 
 export default function SignIn(): React.ReactElement {
 	const [isLoading, setIsLoading] = React.useState(false)
 
 	const [formState, setFormState] = React.useState<FormState<Fields>>({
-		values: {
-			email: '',
-			password: '',
-		},
-		messages: {
-			email: '',
-			password: '',
-		},
-		isValid: {
-			email: false,
-			password: false,
-		},
-		touched: {
-			email: false,
-			password: false,
-		},
+		...newFormState(fieldsArray),
 		validators: {
-			email: (state: FormState<Fields>): FormState<Fields> => {
-				state.isValid.email = !!state.values.email.match(EMAIL_REGEX)
-				state.messages.email = state.isValid.email
-					? ''
-					: 'Invalid email address'
-				return { ...state }
-			},
-			password: (state: FormState<Fields>): FormState<Fields> => {
-				state.isValid.password = state.values.password.length > 0
-				state.messages.password = state.isValid.password ? '' : 'Required'
-				return { ...state }
-			},
+			email: emailValidator,
+			password: passwordValidator,
 		},
-		formValid: false,
-		formMessage: '',
-		attemptedSubmit: false,
 	})
-
-	function handleUserInput(e: React.ChangeEvent<HTMLInputElement>): void {
-		const name = e.target.name as Fields
-		const value = e.target.value.toString()
-
-		setFormState(state => {
-			if (!state.isValid[name]) state = state.validators[name](state)
-			const fieldValues = formState.values
-			fieldValues[name] = value
-			return { ...state, values: fieldValues }
-		})
-	}
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
 
-		setFormState(state => validateForm(state))
-		setFormState(state => prepSubmit(state))
+		setFormState(state => beforeSubmit(state))
 
-		if (!formState.formValid) {
-			setFormState(state => {
-				return { ...state, formMessage: 'Please fix the errors in the form' }
-			})
-			return
-		}
+		if (!formState.formValid) return
 
 		setIsLoading(true)
 
@@ -124,7 +96,9 @@ export default function SignIn(): React.ReactElement {
 						name='email'
 						autoComplete='email'
 						autoFocus
-						onChange={handleUserInput}
+						onChange={(e): void =>
+							setFormState(state => handleValueChange(e, state))
+						}
 						onBlur={(): void => {
 							formState.touched.email = true
 							setFormState(state => validateForm(state))
@@ -141,7 +115,9 @@ export default function SignIn(): React.ReactElement {
 						type='password'
 						id='password'
 						autoComplete='current-password'
-						onChange={handleUserInput}
+						onChange={(e): void =>
+							setFormState(state => handleValueChange(e, state))
+						}
 						onBlur={(): void => {
 							formState.touched.password = true
 							setFormState(state => validateForm(state))
