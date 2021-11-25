@@ -90,6 +90,7 @@ export default function SignIn(): React.ReactElement {
 						margin='normal'
 						required
 						fullWidth
+						type='email'
 						id='email'
 						label='Email Address'
 						name='email'

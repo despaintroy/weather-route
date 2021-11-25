@@ -130,6 +130,7 @@ export default function SignUp(): React.ReactElement {
 						id='email'
 						label='Email Address'
 						name='email'
+						type='email'
 						autoComplete='email'
 						onChange={(e): void =>
 							setFormState(state => handleValueChange(e, state))
