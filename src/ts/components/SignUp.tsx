@@ -53,7 +53,7 @@ const password2Validator = (state: FormState<Fields>): FormState<Fields> => {
 }
 
 export default function SignUp(): React.ReactElement {
-	const [isLoading, setIsLoading] = React.useState(false)
+	const [submitting, setSubmitting] = React.useState(false)
 
 	const [formState, setFormState] = React.useState<FormState<Fields>>({
 		...newFormState(fieldsArray),
@@ -72,7 +72,7 @@ export default function SignUp(): React.ReactElement {
 
 		if (!formState.formValid) return
 
-		setIsLoading(true)
+		setSubmitting(true)
 
 		signUp(
 			formState.values.email,
@@ -84,7 +84,7 @@ export default function SignUp(): React.ReactElement {
 					return { ...state, formMessage: getMessage(e) }
 				})
 			)
-			.finally(() => setIsLoading(false))
+			.finally(() => setSubmitting(false))
 	}
 
 	return (
@@ -128,7 +128,7 @@ export default function SignUp(): React.ReactElement {
 						required
 						fullWidth
 						id='email'
-						label='Email Address'
+						label='Email'
 						name='email'
 						type='email'
 						autoComplete='email'
@@ -195,7 +195,7 @@ export default function SignUp(): React.ReactElement {
 						variant='contained'
 						sx={{ mt: 2, mb: 2 }}
 					>
-						{isLoading ? (
+						{submitting ? (
 							<CircularProgress size={24} color='inherit' />
 						) : (
 							'Sign Up'
