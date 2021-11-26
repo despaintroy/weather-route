@@ -10,7 +10,7 @@ import { Box } from '@mui/system'
 
 import { getInitialFormState } from './validation'
 
-export default function AccountForm(): React.ReactElement {
+export default function ProfileForm(): React.ReactElement {
 	const { user, updateUser } = useContext(UserContext)
 	const [submitting, setSubmitting] = React.useState(false)
 	const [formState, setFormState] = React.useState(getInitialFormState(user))
@@ -51,7 +51,7 @@ export default function AccountForm(): React.ReactElement {
 	}
 
 	return (
-		<Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+		<Box component='form' onSubmit={handleSubmit} noValidate>
 			<TextField
 				variant='standard'
 				fullWidth
@@ -96,7 +96,7 @@ export default function AccountForm(): React.ReactElement {
 				type='submit'
 				fullWidth
 				variant='contained'
-				sx={{ mt: 2, mb: 2, display: hasChanged ? 'default' : 'none' }}
+				sx={{ mt: 2, display: hasChanged ? 'default' : 'none' }}
 			>
 				{submitting ? (
 					<CircularProgress size={24} color='inherit' />

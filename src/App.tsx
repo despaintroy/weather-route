@@ -30,7 +30,6 @@ function App(props: { user: User }): React.ReactElement {
 					<Stack
 						height='100vh'
 						direction='column'
-						justifyContent='space-between'
 						alignItems='stretch'
 						overflow='auto'
 					>
