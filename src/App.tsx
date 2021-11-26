@@ -34,16 +34,24 @@ function App(props: { user: User }): React.ReactElement {
 						alignItems='stretch'
 						overflow='auto'
 					>
-						<Switch>
-							<Route exact path={Paths.home} component={Home} />
-							<Route exact path={Paths.map} component={Favorites} />
-							<Route exact path={Paths.account} component={Account} />
+						<div
+							style={{
+								height: '100%',
+								overflow: 'scroll',
+								paddingBottom: '1rem',
+							}}
+						>
+							<Switch>
+								<Route exact path={Paths.home} component={Home} />
+								<Route exact path={Paths.map} component={Favorites} />
+								<Route exact path={Paths.account} component={Account} />
 
-							{/* Default redirect */}
-							<Route path='/'>
-								<Redirect to={Paths.home} />
-							</Route>
-						</Switch>
+								{/* Default redirect */}
+								<Route path='/'>
+									<Redirect to={Paths.home} />
+								</Route>
+							</Switch>
+						</div>
 						<Navigation />
 					</Stack>
 				</HashRouter>
