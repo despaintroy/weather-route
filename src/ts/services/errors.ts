@@ -20,7 +20,7 @@ export const getMessage = (e: AuthError): string => {
 export const ErrorMessages: FirebaseError = {
 	'auth/email-already-exists': 'An account already exists with this email.',
 	'auth/requires-recent-login':
-		'Please sign out then sign back in to perform this action',
+		'Recent login required. Please sign out then sign back in to perform this action',
 	'auth/weak-password': 'This password is too weak',
 	'auth/invalid-password': 'This password is invalid.',
 	'auth/invalid-email': 'Email address is invalid',

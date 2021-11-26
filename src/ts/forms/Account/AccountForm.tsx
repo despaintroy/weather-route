@@ -1,29 +1,53 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import { UserContext } from 'App'
+import { getMessage } from 'ts/services/errors'
+import { updateEmail, updateName } from 'ts/services/user'
 import { beforeSubmit, handleValueChange, validateForm } from 'ts/utils/helpers'
 
-import { TextField } from '@mui/material'
+import { Alert, Button, CircularProgress, TextField } from '@mui/material'
 import { Box } from '@mui/system'
 
-import { initialFormState } from './validation'
+import { getInitialFormState } from './validation'
 
 export default function AccountForm(): React.ReactElement {
-	const { user } = useContext(UserContext)
+	const { user, updateUser } = useContext(UserContext)
 	const [submitting, setSubmitting] = React.useState(false)
+	const [formState, setFormState] = React.useState(getInitialFormState(user))
+	const [hasChanged, setHasChanged] = React.useState(false)
 
-	const [formState, setFormState] = React.useState(initialFormState)
+	useEffect(
+		() =>
+			setHasChanged(
+				user.name !== formState.values.name ||
+					user.email !== formState.values.email
+			),
+		[formState]
+	)
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
 
 		setFormState(state => beforeSubmit(state))
-
 		if (!formState.formValid) return
 
 		setSubmitting(true)
-		console.log('handleSubmit')
-		setSubmitting(false)
+
+		Promise.all([
+			user.name !== formState.values.name
+				? updateName(formState.values.name)
+				: Promise.resolve(),
+			user.email !== formState.values.email
+				? updateEmail(formState.values.email)
+				: Promise.resolve(),
+		])
+			.then(() => updateUser())
+			.catch(e =>
+				setFormState(state => {
+					return { ...state, formMessage: getMessage(e) }
+				})
+			)
+			.finally(() => setSubmitting(false))
 	}
 
 	return (
@@ -63,7 +87,23 @@ export default function AccountForm(): React.ReactElement {
 				error={formState.touched.email && !formState.isValid.email}
 				helperText={formState.touched.email && formState.messages.email}
 			/>
-			{submitting && <p>Submitting...</p>}
+			{formState.attemptedSubmit && formState.formMessage && (
+				<Alert sx={{ mt: 2 }} severity='error'>
+					{formState.formMessage || 'Form error'}
+				</Alert>
+			)}
+			<Button
+				type='submit'
+				fullWidth
+				variant='contained'
+				sx={{ mt: 2, mb: 2, display: hasChanged ? 'default' : 'none' }}
+			>
+				{submitting ? (
+					<CircularProgress size={24} color='inherit' />
+				) : (
+					'Save Changes'
+				)}
+			</Button>
 		</Box>
 	)
 }

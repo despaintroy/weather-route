@@ -1,4 +1,4 @@
-import { FormState } from 'ts/services/models'
+import { FormState, User } from 'ts/services/models'
 import { EMAIL_REGEX } from 'ts/utils/constants'
 import { newFormState } from 'ts/utils/helpers'
 
@@ -17,10 +17,16 @@ export const nameValidator = (state: FormState<Fields>): FormState<Fields> => {
 	return { ...state }
 }
 
-export const initialFormState: FormState<Fields> = {
-	...newFormState(fieldsArray),
-	validators: {
-		email: emailValidator,
-		name: nameValidator,
-	},
+export const getInitialFormState = (user: User): FormState<Fields> => {
+	return {
+		...newFormState(fieldsArray),
+		values: {
+			name: user.name ?? '',
+			email: user.email ?? '',
+		},
+		validators: {
+			email: emailValidator,
+			name: nameValidator,
+		},
+	}
 }
