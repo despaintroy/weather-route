@@ -12,7 +12,7 @@ export default function Navigation(): React.ReactElement {
 	const [value, setValue] = React.useState(useLocation().pathname)
 
 	return (
-		<Paper elevation={3}>
+		<Paper elevation={3} sx={{ pb: 2 }}>
 			<BottomNavigation
 				showLabels
 				value={value}
