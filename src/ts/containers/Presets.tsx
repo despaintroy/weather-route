@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import InfoPiece from 'ts/components/InfoPiece'
 import { getWeather } from 'ts/services/weather'
 import { CurrentWeather } from 'ts/utils/models'
 
-import {
-	Alert,
-	Button,
-	CircularProgress,
-	Container,
-	Typography,
-} from '@mui/material'
+import { Alert, Container, LinearProgress, Typography } from '@mui/material'
 
 export default function Presets(): React.ReactElement {
-	const [loading, setLoading] = React.useState(false)
+	const [currentPosition, setCurrentPosition] =
+		React.useState<GeolocationPosition>()
 	const [currentWeather, setCurrentWeather] = React.useState<CurrentWeather>()
 
 	const handleGetWeather = (): void => {
-		setLoading(true)
-		getWeather()
-			.then(r => setCurrentWeather(r.current))
-			.finally(() => setLoading(false))
+		currentPosition &&
+			getWeather(
+				currentPosition.coords.latitude,
+				currentPosition.coords.longitude
+			).then(r => setCurrentWeather(r.current))
 	}
+
+	useEffect(() => {
+		if (navigator.geolocation)
+			navigator.geolocation.getCurrentPosition(location =>
+				setCurrentPosition(location)
+			)
+		else alert('Geolocation is not supported by this browser.')
+	}, [])
+
+	useEffect(() => currentPosition && handleGetWeather(), [currentPosition])
 
 	return (
 		<Container>
@@ -31,18 +37,18 @@ export default function Presets(): React.ReactElement {
 			</Alert>
 			<Typography variant='h2'>Weather Service</Typography>
 			<p>For now, this is a demonstration of the weather API service.</p>
-			<Button
-				fullWidth
-				variant='contained'
-				onClick={handleGetWeather}
-				sx={{ mb: 3 }}
-			>
-				{loading ? (
-					<CircularProgress size={24} color='inherit' />
-				) : (
-					'Get Current Weather'
-				)}
-			</Button>
+
+			{!currentWeather && (
+				<>
+					<Typography variant='overline'>
+						{!currentPosition
+							? 'Getting current location...'
+							: 'Getting weather...'}
+					</Typography>
+					<LinearProgress />
+				</>
+			)}
+
 			{currentWeather && (
 				<div>
 					<InfoPiece label='Temperature'>{currentWeather?.temp}ºF</InfoPiece>
