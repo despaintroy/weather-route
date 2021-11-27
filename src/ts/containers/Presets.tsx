@@ -7,9 +7,11 @@ import { CurrentWeather } from 'ts/utils/models'
 import { Alert, Container, LinearProgress, Typography } from '@mui/material'
 
 export default function Presets(): React.ReactElement {
-	const [currentPosition, setCurrentPosition] =
-		React.useState<GeolocationPosition>()
+	const [currentPosition, setCurrentPosition] = React.useState<
+		GeolocationPosition | null | undefined
+	>(undefined)
 	const [currentWeather, setCurrentWeather] = React.useState<CurrentWeather>()
+	const [locationError, setLocationError] = React.useState<string>()
 
 	const handleGetWeather = (): void => {
 		currentPosition &&
@@ -21,13 +23,34 @@ export default function Presets(): React.ReactElement {
 
 	useEffect(() => {
 		if (navigator.geolocation)
-			navigator.geolocation.getCurrentPosition(location =>
-				setCurrentPosition(location)
+			navigator.geolocation.getCurrentPosition(
+				location => setCurrentPosition(location),
+				error => {
+					switch (error.code) {
+						case error.PERMISSION_DENIED:
+							setCurrentPosition(null)
+							setLocationError('User denied the request for Geolocation.')
+							break
+						case error.POSITION_UNAVAILABLE:
+							setCurrentPosition(null)
+							setLocationError('Location information is unavailable.')
+							break
+						case error.TIMEOUT:
+							setCurrentPosition(null)
+							setLocationError('The request to get user location timed out.')
+							break
+						default:
+							setCurrentPosition(null)
+							setLocationError('An unknown error occurred.')
+					}
+				}
 			)
 		else alert('Geolocation is not supported by this browser.')
 	}, [])
 
-	useEffect(() => currentPosition && handleGetWeather(), [currentPosition])
+	useEffect(() => {
+		if (currentPosition) handleGetWeather()
+	}, [currentPosition])
 
 	return (
 		<Container>
@@ -38,7 +61,7 @@ export default function Presets(): React.ReactElement {
 			<Typography variant='h2'>Weather Service</Typography>
 			<p>For now, this is a demonstration of the weather API service.</p>
 
-			{!currentWeather && (
+			{(!currentWeather || currentPosition === undefined) && (
 				<>
 					<Typography variant='overline'>
 						{!currentPosition
@@ -47,6 +70,10 @@ export default function Presets(): React.ReactElement {
 					</Typography>
 					<LinearProgress />
 				</>
+			)}
+
+			{currentPosition === null && (
+				<Alert severity='error'>{locationError}</Alert>
 			)}
 
 			{currentWeather && (
