@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ProfileForm from 'ts/forms/Profile/ProfileForm'
+import ProfileForm from 'ts/forms/Profile'
 import { signOut } from 'ts/services/auth'
 
 import { TabContext, TabList, TabPanel } from '@mui/lab'
