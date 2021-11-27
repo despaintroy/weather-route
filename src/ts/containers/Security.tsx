@@ -2,12 +2,12 @@ import React from 'react'
 
 import ChangePasswordForm from 'ts/forms/ChangePassword'
 
-import { Container } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 
 export default function Security(): React.ReactElement {
 	return (
 		<Container>
-			<h1>Change Password</h1>
+			<Typography variant='h1'>Change Password</Typography>
 			<ChangePasswordForm />
 		</Container>
 	)

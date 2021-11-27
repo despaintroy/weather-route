@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Container } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 
 export default function Presets(): React.ReactElement {
 	return (
 		<Container>
-			<h1>Presets</h1>
+			<Typography variant='h1'>Presets</Typography>
 			<p>This is the page for saving favorite routes to quickly reuse.</p>
 		</Container>
 	)

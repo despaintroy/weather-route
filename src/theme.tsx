@@ -41,6 +41,14 @@ const theme = createTheme({
 			},
 		},
 	},
+	typography: {
+		h1: {
+			color: '#2a8544',
+			fontSize: '2.5rem',
+			fontWeight: '500',
+			marginTop: '1.5rem',
+		},
+	},
 })
 
 export default theme
