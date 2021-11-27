@@ -1,4 +1,4 @@
-import { FormState, User } from 'ts/services/models'
+import { FormState } from 'ts/services/models'
 import { newFormState } from 'ts/utils/helpers'
 
 const fieldsArray = ['password1', 'password2'] as const
@@ -22,7 +22,7 @@ export const password2Validator = (
 	return { ...state }
 }
 
-export const getInitialFormState = (user: User): FormState<Fields> => {
+export const getInitialFormState = (): FormState<Fields> => {
 	return {
 		...newFormState(fieldsArray),
 		validators: {

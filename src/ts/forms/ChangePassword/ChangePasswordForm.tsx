@@ -11,9 +11,9 @@ import { Box } from '@mui/system'
 import { getInitialFormState } from './validation'
 
 export default function ChangePasswordForm(): React.ReactElement {
-	const { user, updateUser } = useContext(UserContext)
+	const { updateUser } = useContext(UserContext)
 	const [submitting, setSubmitting] = React.useState(false)
-	const [formState, setFormState] = React.useState(getInitialFormState(user))
+	const [formState, setFormState] = React.useState(getInitialFormState())
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
