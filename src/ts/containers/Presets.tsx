@@ -29,19 +29,21 @@ export default function Presets(): React.ReactElement {
 					switch (error.code) {
 						case error.PERMISSION_DENIED:
 							setCurrentPosition(null)
-							setLocationError('User denied the request for Geolocation.')
+							setLocationError('Location request denied')
 							break
 						case error.POSITION_UNAVAILABLE:
 							setCurrentPosition(null)
-							setLocationError('Location information is unavailable.')
+							setLocationError('Location information is unavailable')
 							break
 						case error.TIMEOUT:
 							setCurrentPosition(null)
-							setLocationError('The request to get user location timed out.')
+							setLocationError('Location request timed out')
 							break
 						default:
 							setCurrentPosition(null)
-							setLocationError('An unknown error occurred.')
+							setLocationError(
+								'An unknown error occurred while getting the location'
+							)
 					}
 				}
 			)
@@ -61,7 +63,7 @@ export default function Presets(): React.ReactElement {
 			<Typography variant='h2'>Weather Service</Typography>
 			<p>For now, this is a demonstration of the weather API service.</p>
 
-			{(!currentWeather || currentPosition === undefined) && (
+			{!locationError && (!currentWeather || !currentPosition) && (
 				<>
 					<Typography variant='overline'>
 						{!currentPosition
@@ -72,9 +74,7 @@ export default function Presets(): React.ReactElement {
 				</>
 			)}
 
-			{currentPosition === null && (
-				<Alert severity='error'>{locationError}</Alert>
-			)}
+			{locationError && <Alert severity='error'>{locationError}</Alert>}
 
 			{currentWeather && (
 				<div>
