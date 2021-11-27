@@ -3,8 +3,8 @@ import React, { Context, useState } from 'react'
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
 import Account from 'ts/containers/Account'
-import Favorites from 'ts/containers/Favorites'
 import Home from 'ts/containers/Home'
+import Presets from 'ts/containers/Presets'
 import { User } from 'ts/services/models'
 import { getUser } from 'ts/services/user'
 import Paths from 'ts/utils/paths'
@@ -27,22 +27,16 @@ function App(props: { user: User }): React.ReactElement {
 		<UserContext.Provider value={{ user, updateUser }}>
 			<div>
 				<HashRouter basename='/'>
-					<Stack
-						height='100vh'
-						direction='column'
-						alignItems='stretch'
-						overflow='auto'
-					>
+					<Stack height='100vh'>
 						<div
 							style={{
 								height: '100%',
 								overflow: 'scroll',
-								paddingBottom: '1rem',
 							}}
 						>
 							<Switch>
 								<Route exact path={Paths.home} component={Home} />
-								<Route exact path={Paths.map} component={Favorites} />
+								<Route exact path={Paths.map} component={Presets} />
 								<Route exact path={Paths.account} component={Account} />
 
 								{/* Default redirect */}

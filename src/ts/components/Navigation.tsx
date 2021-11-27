@@ -31,7 +31,7 @@ export default function Navigation(): React.ReactElement {
 					component={Link}
 					to={Paths.map}
 					value={Paths.map}
-					label='Favorites'
+					label='Presets'
 					icon={<StarIcon />}
 				/>
 				<BottomNavigationAction
