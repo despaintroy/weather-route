@@ -2,14 +2,16 @@ import React, { Context, useState } from 'react'
 
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
-import Account from 'ts/containers/Account'
 import Home from 'ts/containers/Home'
 import Presets from 'ts/containers/Presets'
+import Profile from 'ts/containers/Profile'
+import Security from 'ts/containers/Security'
 import { User } from 'ts/services/models'
 import { getUser } from 'ts/services/user'
+import { drawerWidth } from 'ts/utils/constants'
 import Paths from 'ts/utils/paths'
 
-import { Stack } from '@mui/material'
+import { Box, Stack, Toolbar } from '@mui/material'
 
 export let UserContext: Context<{ user: User; updateUser: () => void }>
 
@@ -25,30 +27,34 @@ function App(props: { user: User }): React.ReactElement {
 
 	return (
 		<UserContext.Provider value={{ user, updateUser }}>
-			<div>
+			<Box sx={{ display: 'flex', height: '100vh' }}>
 				<HashRouter basename='/'>
-					<Stack height='100vh'>
-						<div
-							style={{
-								height: '100%',
-								overflow: 'scroll',
-							}}
-						>
+					<Navigation />
+					<Box
+						component='main'
+						sx={{
+							height: '100%',
+							flexGrow: 1,
+							width: { sm: `calc(100% - ${drawerWidth}px)` },
+						}}
+					>
+						<Stack height='100%'>
+							<Toolbar />
 							<Switch>
 								<Route exact path={Paths.home} component={Home} />
-								<Route exact path={Paths.map} component={Presets} />
-								<Route exact path={Paths.account} component={Account} />
+								<Route exact path={Paths.presets} component={Presets} />
+								<Route exact path={Paths.profile} component={Profile} />
+								<Route exact path={Paths.security} component={Security} />
 
 								{/* Default redirect */}
 								<Route path='/'>
 									<Redirect to={Paths.home} />
 								</Route>
 							</Switch>
-						</div>
-						<Navigation />
-					</Stack>
+						</Stack>
+					</Box>
 				</HashRouter>
-			</div>
+			</Box>
 		</UserContext.Provider>
 	)
 }

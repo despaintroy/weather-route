@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Container from '@mui/material/Container'
+import { Container } from '@mui/material'
 
 export default function Presets(): React.ReactElement {
 	return (

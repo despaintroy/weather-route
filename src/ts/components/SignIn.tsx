@@ -7,7 +7,7 @@ import { Avatar, Box, Container, Typography } from '@mui/material'
 
 export default function SignIn(): React.ReactElement {
 	return (
-		<Container component='main' maxWidth='xs'>
+		<Container>
 			<Box
 				sx={{
 					mt: 8,

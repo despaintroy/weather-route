@@ -1,7 +1,8 @@
 const Paths = {
 	home: '/home',
-	map: '/map',
-	account: '/account',
+	presets: '/presets',
+	profile: '/profile',
+	security: '/security',
 	signIn: '/signin',
 	signUp: '/signup',
 }
