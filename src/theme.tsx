@@ -48,6 +48,12 @@ const theme = createTheme({
 			fontWeight: '500',
 			marginTop: '1.5rem',
 		},
+		h2: {
+			color: '#2a8544',
+			fontSize: '1.5rem',
+			fontWeight: '500',
+			marginTop: '1.5rem',
+		},
 	},
 })
 

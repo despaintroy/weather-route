@@ -1,4 +1,4 @@
-import { FormState } from 'ts/services/models'
+import { FormState } from 'ts/utils/models'
 
 export function newFormState<FieldNames extends string>(
 	fields: readonly FieldNames[]

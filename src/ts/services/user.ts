@@ -6,7 +6,7 @@ import {
 	User as FireUser,
 } from 'firebase/auth'
 import { auth } from 'ts/services/auth'
-import { User } from 'ts/services/models'
+import { User } from 'ts/utils/models'
 
 export const formatUser = (user: FireUser | null): User | null => {
 	if (user)

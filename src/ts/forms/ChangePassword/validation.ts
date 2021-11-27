@@ -1,5 +1,5 @@
-import { FormState } from 'ts/services/models'
 import { newFormState } from 'ts/utils/helpers'
+import { FormState } from 'ts/utils/models'
 
 const fieldsArray = ['password1', 'password2'] as const
 type Fields = typeof fieldsArray[number]

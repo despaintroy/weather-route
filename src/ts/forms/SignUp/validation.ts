@@ -1,6 +1,6 @@
-import { FormState } from 'ts/services/models'
 import { EMAIL_REGEX } from 'ts/utils/constants'
 import { newFormState } from 'ts/utils/helpers'
+import { FormState } from 'ts/utils/models'
 
 const fieldsArray = ['name', 'email', 'password1', 'password2'] as const
 type Fields = typeof fieldsArray[number]

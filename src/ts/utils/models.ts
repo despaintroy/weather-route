@@ -19,3 +19,23 @@ export interface FormState<FieldNames extends string> {
 	formMessage: string
 	attemptedSubmit: boolean
 }
+
+export type CurrentWeather = {
+	clouds: number
+	dew_point: number
+	dt: number
+	feels_like: number
+	humidity: number
+	pressure: number
+	sunrise: number
+	sunset: number
+	temp: number
+	uvi: number
+	visibility: number
+	wind_deg: number
+	wind_speed: number
+}
+
+export type Weather = {
+	current: CurrentWeather
+}
