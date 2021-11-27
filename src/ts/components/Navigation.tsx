@@ -5,8 +5,8 @@ import { signOut } from 'ts/services/auth'
 import { drawerWidth } from 'ts/utils/constants'
 import Paths from 'ts/utils/paths'
 
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import MenuIcon from '@mui/icons-material/Menu'
+import { Icon } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -26,41 +26,49 @@ export default function Navigation(): React.ReactElement {
 		setMobileOpen(!mobileOpen)
 	}
 
+	type menuOptions = Array<{
+		title: string
+		url: string
+		icon: string
+	}>
+
+	const mainMenuOptions: menuOptions = [
+		{ title: 'Home', url: Paths.home, icon: 'home' },
+		{ title: 'Presets', url: Paths.presets, icon: 'star' },
+	]
+
+	const profileMenuOptions: menuOptions = [
+		{ title: 'Profile', url: Paths.profile, icon: 'account_circle' },
+		{ title: 'Security', url: Paths.security, icon: 'lock' },
+	]
+
 	const drawer = (
 		<div>
 			<Toolbar />
 			<Divider />
-			<List>
-				<ListItem button component={Link} to={Paths.home}>
-					<ListItemIcon>
-						<AccountCircleIcon />
-					</ListItemIcon>
-					<ListItemText primary='Home' />
-				</ListItem>
-				<ListItem button component={Link} to={Paths.presets}>
-					<ListItemIcon>
-						<AccountCircleIcon />
-					</ListItemIcon>
-					<ListItemText primary='Presets' />
-				</ListItem>
+			<List onClick={handleDrawerToggle}>
+				{mainMenuOptions.map(option => (
+					<ListItem button component={Link} to={option.url} key={option.title}>
+						<ListItemIcon>
+							<Icon>{option.icon}</Icon>
+						</ListItemIcon>
+						<ListItemText primary={option.title} />
+					</ListItem>
+				))}
 			</List>
 			<Divider />
-			<List>
-				<ListItem button component={Link} to={Paths.profile}>
-					<ListItemIcon>
-						<AccountCircleIcon />
-					</ListItemIcon>
-					<ListItemText primary='Profile' />
-				</ListItem>
-				<ListItem button component={Link} to={Paths.security}>
-					<ListItemIcon>
-						<AccountCircleIcon />
-					</ListItemIcon>
-					<ListItemText primary='Security' />
-				</ListItem>
+			<List onClick={handleDrawerToggle}>
+				{profileMenuOptions.map(option => (
+					<ListItem button component={Link} to={option.url} key={option.title}>
+						<ListItemIcon>
+							<Icon>{option.icon}</Icon>
+						</ListItemIcon>
+						<ListItemText primary={option.title} />
+					</ListItem>
+				))}
 				<ListItem button onClick={signOut}>
 					<ListItemIcon>
-						<AccountCircleIcon />
+						<Icon>logout</Icon>
 					</ListItemIcon>
 					<ListItemText primary='Sign Out' />
 				</ListItem>
@@ -97,7 +105,6 @@ export default function Navigation(): React.ReactElement {
 				sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
 				aria-label='mailbox folders'
 			>
-				{/* The implementation can be swapped with js to avoid SEO duplication of links. */}
 				<Drawer
 					container={undefined}
 					variant='temporary'
@@ -132,37 +139,4 @@ export default function Navigation(): React.ReactElement {
 			</Box>
 		</>
 	)
-
-	// <Paper elevation={3} sx={{ pb: 2 }}>
-	// 	<BottomNavigation
-	// 		showLabels
-	// 		value={value}
-	// 		onChange={(_event, newValue): void => {
-	// 			setValue(newValue)
-	// 		}}
-	// 	>
-	// 		<BottomNavigationAction
-	// 			component={Link}
-	// 			to={Paths.home}
-	// 			value={Paths.home}
-	// 			label='Home'
-	// 			icon={<HomeIcon />}
-	// 		/>
-	// 		<BottomNavigationAction
-	// 			component={Link}
-	// 			to={Paths.map}
-	// 			value={Paths.map}
-	// 			label='Presets'
-	// 			icon={<StarIcon />}
-	// 		/>
-	// 		<BottomNavigationAction
-	// 			component={Link}
-	// 			to={Paths.account}
-	// 			value={Paths.account}
-	// 			label='Account'
-	// 			icon={<AccountCircleIcon />}
-	// 		/>
-	// 	</BottomNavigation>
-	// </Paper>
-	// )
 }
