@@ -5,9 +5,9 @@ import {
 	LinkProps as RouterLinkProps,
 } from 'react-router-dom'
 
-import { red } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
+// Allow adapting MUI links to react-router-dom links
 const LinkBehavior = React.forwardRef<
 	any,
 	Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
@@ -22,13 +22,10 @@ LinkBehavior.displayName = 'LinkBehavior'
 const theme = createTheme({
 	palette: {
 		primary: {
-			main: '#556cd6',
+			main: '#2a8544',
 		},
 		secondary: {
-			main: '#19857b',
-		},
-		error: {
-			main: red.A400,
+			main: '#f50057',
 		},
 	},
 	components: {
