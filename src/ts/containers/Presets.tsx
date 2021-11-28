@@ -11,14 +11,16 @@ export default function Presets(): React.ReactElement {
 		GeolocationPosition | null | undefined
 	>(undefined)
 	const [currentWeather, setCurrentWeather] = React.useState<CurrentWeather>()
-	const [locationError, setLocationError] = React.useState<string>()
+	const [errorText, setErrorText] = React.useState<string>()
 
 	const handleGetWeather = (): void => {
 		currentPosition &&
 			getWeather(
 				currentPosition.coords.latitude,
 				currentPosition.coords.longitude
-			).then(r => setCurrentWeather(r.current))
+			)
+				.then(r => setCurrentWeather(r.current))
+				.catch(e => setErrorText(e.response.data.message))
 	}
 
 	useEffect(() => {
@@ -29,19 +31,19 @@ export default function Presets(): React.ReactElement {
 					switch (error.code) {
 						case error.PERMISSION_DENIED:
 							setCurrentPosition(null)
-							setLocationError('Location request denied')
+							setErrorText('Location request denied')
 							break
 						case error.POSITION_UNAVAILABLE:
 							setCurrentPosition(null)
-							setLocationError('Location information is unavailable')
+							setErrorText('Location information is unavailable')
 							break
 						case error.TIMEOUT:
 							setCurrentPosition(null)
-							setLocationError('Location request timed out')
+							setErrorText('Location request timed out')
 							break
 						default:
 							setCurrentPosition(null)
-							setLocationError(
+							setErrorText(
 								'An unknown error occurred while getting the location'
 							)
 					}
@@ -63,7 +65,7 @@ export default function Presets(): React.ReactElement {
 			<Typography variant='h2'>Weather Service</Typography>
 			<p>For now, this is a demonstration of the weather API service.</p>
 
-			{!locationError && (!currentWeather || !currentPosition) && (
+			{!errorText && (!currentWeather || !currentPosition) && (
 				<>
 					<Typography variant='overline'>
 						{!currentPosition
@@ -74,7 +76,7 @@ export default function Presets(): React.ReactElement {
 				</>
 			)}
 
-			{locationError && <Alert severity='error'>{locationError}</Alert>}
+			{errorText && <Alert severity='error'>{errorText}</Alert>}
 
 			{currentWeather && (
 				<div>
