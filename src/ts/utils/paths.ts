@@ -1,6 +1,7 @@
 const Paths = {
 	home: '/home',
-	presets: '/presets',
+	savedRoutes: '/saved-routes',
+	weather: '/weather',
 	profile: '/profile',
 	security: '/security',
 	signIn: '/signin',

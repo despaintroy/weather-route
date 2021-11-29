@@ -6,7 +6,7 @@ import { CurrentWeather } from 'ts/utils/models'
 
 import { Alert, Container, LinearProgress, Typography } from '@mui/material'
 
-export default function Presets(): React.ReactElement {
+export default function Weather(): React.ReactElement {
 	const [currentPosition, setCurrentPosition] = React.useState<
 		GeolocationPosition | null | undefined
 	>(undefined)
@@ -58,12 +58,9 @@ export default function Presets(): React.ReactElement {
 
 	return (
 		<Container>
-			<Typography variant='h1'>Presets</Typography>
-			<Alert severity='warning' sx={{ mt: 2 }}>
-				This page will be used for saving favorite routes to quickly reuse.
-			</Alert>
-			<Typography variant='h2'>Weather Service</Typography>
-			<p>For now, this is a demonstration of the weather API service.</p>
+			<Typography variant='h1'>Weather</Typography>
+
+			<p>Weather for current location</p>
 
 			{!errorText && (!currentWeather || !currentPosition) && (
 				<>

@@ -20,7 +20,7 @@ export interface FormState<FieldNames extends string> {
 	attemptedSubmit: boolean
 }
 
-export type CurrentWeather = {
+export interface CurrentWeather {
 	clouds: number
 	dew_point: number
 	dt: number
@@ -36,6 +36,18 @@ export type CurrentWeather = {
 	wind_speed: number
 }
 
-export type Weather = {
+export interface Weather {
 	current: CurrentWeather
+}
+
+export interface LatLong {
+	lat: number
+	lon: number
+}
+
+export interface SavedRoute {
+	id: string
+	name: string
+	begin: LatLong
+	end: LatLong
 }

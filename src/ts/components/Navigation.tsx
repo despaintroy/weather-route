@@ -34,7 +34,8 @@ export default function Navigation(): React.ReactElement {
 
 	const mainMenuOptions: menuOptions = [
 		{ title: 'Home', url: Paths.home, icon: 'home' },
-		{ title: 'Presets', url: Paths.presets, icon: 'star' },
+		{ title: 'Saved Routes', url: Paths.savedRoutes, icon: 'star' },
+		{ title: 'Weather', url: Paths.weather, icon: 'wb_sunny' },
 	]
 
 	const profileMenuOptions: menuOptions = [

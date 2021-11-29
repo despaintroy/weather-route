@@ -3,9 +3,10 @@ import React, { Context, useState } from 'react'
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
 import Home from 'ts/containers/Home'
-import Presets from 'ts/containers/Presets'
 import Profile from 'ts/containers/Profile'
+import SavedRoutes from 'ts/containers/SavedRoutes'
 import Security from 'ts/containers/Security'
+import Weather from 'ts/containers/Weather'
 import { getUser } from 'ts/services/user'
 import { drawerWidth } from 'ts/utils/constants'
 import { User } from 'ts/utils/models'
@@ -42,7 +43,8 @@ function App(props: { user: User }): React.ReactElement {
 							<Toolbar />
 							<Switch>
 								<Route exact path={Paths.home} component={Home} />
-								<Route exact path={Paths.presets} component={Presets} />
+								<Route exact path={Paths.savedRoutes} component={SavedRoutes} />
+								<Route exact path={Paths.weather} component={Weather} />
 								<Route exact path={Paths.profile} component={Profile} />
 								<Route exact path={Paths.security} component={Security} />
 
