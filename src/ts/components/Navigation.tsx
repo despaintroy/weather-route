@@ -67,6 +67,12 @@ export default function Navigation(): React.ReactElement {
 						<ListItemText primary={option.title} />
 					</ListItem>
 				))}
+				<ListItem button onClick={(): void => location.reload()}>
+					<ListItemIcon>
+						<Icon>refresh</Icon>
+					</ListItemIcon>
+					<ListItemText primary='Refresh' />
+				</ListItem>
 				<ListItem button onClick={signOut}>
 					<ListItemIcon>
 						<Icon>logout</Icon>
