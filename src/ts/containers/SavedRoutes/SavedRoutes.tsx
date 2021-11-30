@@ -7,7 +7,6 @@ import {
 	Alert,
 	CircularProgress,
 	Container,
-	Divider,
 	Fab,
 	Icon,
 	List,
@@ -33,18 +32,26 @@ export default function SavedRoutes(): React.ReactElement {
 		if (!savedRoutes)
 			return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 3 }} />
 
+		if (savedRoutes.length === 0)
+			return (
+				<p>
+					No saved routes. Click the{' '}
+					<Icon sx={{ fontSize: '1rem', fontWeight: 'bold' }}>add</Icon> icon to
+					add a new one.
+				</p>
+			)
+
 		return (
-			<>
-				<Divider />
-				<List>
-					{savedRoutes.map(route => (
-						<div key={route.id}>
-							<SavedRouteListItem route={route} />
-							<Divider />
-						</div>
-					))}
-				</List>
-			</>
+			<List>
+				{savedRoutes.map(route => (
+					<div key={route.id}>
+						<SavedRouteListItem
+							route={route}
+							changeCallback={updateSavedRoutes}
+						/>
+					</div>
+				))}
+			</List>
 		)
 	}
 
