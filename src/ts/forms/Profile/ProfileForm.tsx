@@ -94,6 +94,7 @@ export default function ProfileForm(): React.ReactElement {
 			)}
 			<Button
 				type='submit'
+				disabled={submitting}
 				fullWidth
 				variant='contained'
 				sx={{ mt: 2, display: hasChanged ? 'default' : 'none' }}
