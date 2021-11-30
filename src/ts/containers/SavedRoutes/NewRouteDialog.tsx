@@ -35,7 +35,7 @@ export default function NewRouteDialog(
 					submitCallback={onClose}
 				/>
 			</DialogContent>
-			<DialogActions sx={{ pb: fullScreen ? 3 : 'default' }}>
+			<DialogActions sx={{ pb: fullScreen ? 5 : 'default' }}>
 				<Button onClick={onClose}>Cancel</Button>
 				<Button
 					type='submit'
