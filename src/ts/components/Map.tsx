@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box } from '@mui/system'
+import { Box, SxProps } from '@mui/system'
 import {
 	DirectionsRenderer,
 	DirectionsService,
@@ -11,10 +11,11 @@ import {
 export type MapProps = {
 	start: string
 	end: string
+	sx?: SxProps
 }
 
 function Map(props: MapProps): React.ReactElement {
-	const { start, end } = props
+	const { start, end, sx } = props
 
 	// Due to bug in react google maps api, this is needed to prevent infinite re-renders
 	const responseCount = React.useRef(0)
@@ -36,12 +37,17 @@ function Map(props: MapProps): React.ReactElement {
 	}
 
 	return (
-		<Box height='100%'>
+		<Box height='100%' sx={sx}>
 			{isLoaded && (
 				<GoogleMap
 					mapContainerStyle={{
 						width: '100%',
 						height: '100%',
+					}}
+					options={{
+						fullscreenControl: false,
+						streetViewControl: false,
+						mapTypeControl: false,
 					}}
 				>
 					<DirectionsService

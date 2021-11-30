@@ -27,7 +27,13 @@ export default function NewRouteDialog(
 	const [submitting, setSubmitting] = React.useState(false)
 
 	return (
-		<Dialog fullScreen={fullScreen} open={open} fullWidth maxWidth='sm'>
+		<Dialog
+			fullScreen={fullScreen}
+			open={open}
+			fullWidth
+			maxWidth='sm'
+			scroll='paper'
+		>
 			<DialogTitle>New Saved Route</DialogTitle>
 			<DialogContent dividers>
 				<NewSavedRouteForm

@@ -1,10 +1,11 @@
 import React from 'react'
 
+import Map from 'ts/components/Map'
 import { getMessage } from 'ts/services/errors'
 import { newSavedRoute } from 'ts/services/savedRoutes'
 import { beforeSubmit, handleValueChange, validateForm } from 'ts/utils/helpers'
 
-import { Alert, TextField } from '@mui/material'
+import { Alert, Stack, TextField } from '@mui/material'
 import { Box } from '@mui/system'
 
 import { getInitialFormState } from './validation'
@@ -21,6 +22,17 @@ export default function NewSavedRouteForm(
 ): React.ReactElement {
 	const { setSubmitting, submitCallback } = props
 	const [formState, setFormState] = React.useState(getInitialFormState())
+	const [waypoints, setWaypoints] =
+		React.useState<{ start: string; end: string }>()
+
+	function updateWaypoints() {
+		formState.values.start &&
+			formState.values.end &&
+			setWaypoints({
+				start: formState.values.start.toString(),
+				end: formState.values.end.toString(),
+			})
+	}
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
 		event.preventDefault()
@@ -53,65 +65,78 @@ export default function NewSavedRouteForm(
 	}
 
 	return (
-		<Box
-			id={NewSavedRouteFormId}
-			component='form'
-			onSubmit={handleSubmit}
-			noValidate
-		>
-			<TextField
-				variant='standard'
-				fullWidth
-				label='Route Name'
-				name='name'
-				margin='normal'
-				onChange={(e): void =>
-					setFormState(state => handleValueChange(e, state))
-				}
-				onBlur={(): void => {
-					formState.touched.name = true
-					setFormState(state => validateForm(state))
-				}}
-				error={formState.touched.name && !formState.isValid.name}
-				helperText={formState.touched.name && formState.messages.name}
-			/>
-			<TextField
-				variant='standard'
-				fullWidth
-				label='Start Location'
-				name='start'
-				margin='normal'
-				onChange={(e): void =>
-					setFormState(state => handleValueChange(e, state))
-				}
-				onBlur={(): void => {
-					formState.touched.start = true
-					setFormState(state => validateForm(state))
-				}}
-				error={formState.touched.start && !formState.isValid.start}
-				helperText={formState.touched.start && formState.messages.start}
-			/>
-			<TextField
-				variant='standard'
-				fullWidth
-				label='End Location'
-				name='end'
-				margin='normal'
-				onChange={(e): void =>
-					setFormState(state => handleValueChange(e, state))
-				}
-				onBlur={(): void => {
-					formState.touched.end = true
-					setFormState(state => validateForm(state))
-				}}
-				error={formState.touched.end && !formState.isValid.end}
-				helperText={formState.touched.end && formState.messages.end}
-			/>
-			{formState.attemptedSubmit && formState.formMessage && (
-				<Alert sx={{ mt: 2 }} severity='error'>
-					{formState.formMessage || 'Form error'}
-				</Alert>
+		<Stack gap={2}>
+			<Box
+				id={NewSavedRouteFormId}
+				component='form'
+				onSubmit={handleSubmit}
+				noValidate
+				sx={{ height: '100%' }}
+			>
+				<TextField
+					variant='standard'
+					fullWidth
+					label='Route Name'
+					name='name'
+					margin='normal'
+					onChange={(e): void =>
+						setFormState(state => handleValueChange(e, state))
+					}
+					onBlur={(): void => {
+						formState.touched.name = true
+						setFormState(state => validateForm(state))
+					}}
+					error={formState.touched.name && !formState.isValid.name}
+					helperText={formState.touched.name && formState.messages.name}
+				/>
+				<TextField
+					variant='standard'
+					fullWidth
+					label='Start Location'
+					name='start'
+					margin='normal'
+					onChange={(e): void =>
+						setFormState(state => handleValueChange(e, state))
+					}
+					onBlur={(): void => {
+						formState.touched.start = true
+						setFormState(state => validateForm(state))
+						updateWaypoints()
+					}}
+					error={formState.touched.start && !formState.isValid.start}
+					helperText={formState.touched.start && formState.messages.start}
+				/>
+				<TextField
+					variant='standard'
+					fullWidth
+					label='End Location'
+					name='end'
+					margin='normal'
+					onChange={(e): void =>
+						setFormState(state => handleValueChange(e, state))
+					}
+					onBlur={(): void => {
+						formState.touched.end = true
+						setFormState(state => validateForm(state))
+						updateWaypoints()
+					}}
+					error={formState.touched.end && !formState.isValid.end}
+					helperText={formState.touched.end && formState.messages.end}
+				/>
+				{formState.attemptedSubmit && formState.formMessage && (
+					<Alert sx={{ mt: 2 }} severity='error'>
+						{formState.formMessage || 'Form error'}
+					</Alert>
+				)}
+			</Box>
+
+			{waypoints && (
+				<Map
+					start={waypoints.start}
+					end={waypoints.end}
+					sx={{ height: '20rem' }}
+				/>
 			)}
-		</Box>
+		</Stack>
 	)
 }
