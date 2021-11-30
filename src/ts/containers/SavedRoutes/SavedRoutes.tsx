@@ -8,17 +8,14 @@ import {
 	CircularProgress,
 	Container,
 	Divider,
+	Fab,
 	Icon,
-	IconButton,
 	List,
-	ListItem,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
 	Typography,
 } from '@mui/material'
 
 import NewRouteDialog from './NewRouteDialog'
+import SavedRouteListItem from './SavedRouteListItem'
 
 export default function SavedRoutes(): React.ReactElement {
 	const [savedRoutes, setSavedRoutes] = React.useState<SavedRoute[]>()
@@ -26,70 +23,47 @@ export default function SavedRoutes(): React.ReactElement {
 	const [showDialog, setShowDialog] = React.useState(false)
 	useEffect(() => updateSavedRoutes(), [])
 
-	const addNewRoute = (): void => {
-		setShowDialog(true)
-	}
-
 	const updateSavedRoutes = (): void => {
 		getSavedRoutes()
 			.then(r => setSavedRoutes(r))
 			.catch(() => setErrorText('Error loading saved routes'))
 	}
 
-	const renderSavedRoutes = (): React.ReactElement => {
+	const renderRouteList = (): React.ReactElement => {
 		if (!savedRoutes)
 			return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 3 }} />
 
 		return (
-			<List>
-				<ListItem disablePadding>
-					<ListItemButton onClick={addNewRoute}>
-						<ListItemIcon>
-							<Icon>add</Icon>
-						</ListItemIcon>
-						<ListItemText primary={'Save new route'} />
-					</ListItemButton>
-				</ListItem>
+			<>
 				<Divider />
-				{savedRoutes.map(route => (
-					<div key={route.id}>
-						<ListItem
-							disablePadding
-							secondaryAction={
-								<IconButton>
-									<Icon>more_vert</Icon>
-								</IconButton>
-							}
-						>
-							<ListItemButton>
-								<ListItemIcon>
-									<Icon>route</Icon>
-								</ListItemIcon>
-								<ListItemText
-									primary={route.name}
-									secondary={
-										<span>
-											{route.begin.lat}º, {route.begin.lon}º &rarr;{' '}
-											{route.end.lat}º, {route.end.lon}º
-										</span>
-									}
-								/>
-							</ListItemButton>
-						</ListItem>
-						<Divider />
-					</div>
-				))}
-			</List>
+				<List>
+					{savedRoutes.map(route => (
+						<div key={route.id}>
+							<SavedRouteListItem route={route} />
+							<Divider />
+						</div>
+					))}
+				</List>
+			</>
 		)
 	}
 
 	return (
 		<Container>
-			<Typography variant='h1'>Saved Routes</Typography>
+			<Typography variant='h1' sx={{ mb: 2 }}>
+				Saved Routes
+			</Typography>
+			<Fab
+				color='primary'
+				onClick={(): void => setShowDialog(true)}
+				sx={{ position: 'fixed', bottom: '2rem', right: '1.5rem' }}
+			>
+				<Icon>add</Icon>
+			</Fab>
 			{errorText ? (
-				<Alert severity='error'>This is an error alert — check it out!</Alert>
+				<Alert severity='error'>{errorText}</Alert>
 			) : (
-				renderSavedRoutes()
+				renderRouteList()
 			)}
 			<NewRouteDialog
 				open={showDialog}
