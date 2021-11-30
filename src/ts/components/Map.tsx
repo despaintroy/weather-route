@@ -29,7 +29,6 @@ function Map(props: MapProps): React.ReactElement {
 	const directionsCallback = (
 		response: google.maps.DirectionsResult | null
 	): void => {
-		console.log(response)
 		if (response !== null && responseCount.current < 2) {
 			responseCount.current += 1
 			setDirections(response)
