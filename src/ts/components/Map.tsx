@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { LegacyRef, useCallback, useState } from 'react'
 
 import { Box, SxProps } from '@mui/system'
 import {
-	DirectionsRenderer,
-	DirectionsService,
-	GoogleMap,
-	useJsApiLoader,
-} from '@react-google-maps/api'
+	GoogleMapProvider,
+	useDirections,
+	useGoogleMap,
+} from '@ubilabs/google-maps-react-hooks'
+
+const MapCanvas = React.forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
+	<div ref={ref} style={{ height: '100%' }} />
+))
 
 export type MapProps = {
 	start: string
@@ -16,59 +19,53 @@ export type MapProps = {
 
 function Map(props: MapProps): React.ReactElement {
 	const { start, end, sx } = props
-
-	// Due to bug in react google maps api, this is needed to prevent infinite re-renders
-	const responseCount = React.useRef(0)
-	const [directions, setDirections] =
-		React.useState<google.maps.DirectionsResult | null>(null)
-
-	const { isLoaded } = useJsApiLoader({
-		id: 'google-map-script',
-		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY ?? '',
-	})
-
-	const directionsCallback = (
-		response: google.maps.DirectionsResult | null
-	): void => {
-		if (response !== null && responseCount.current < 2) {
-			responseCount.current += 1
-			setDirections(response)
-		}
-	}
+	const [mapContainer, setMapContainer] = useState(null)
+	const mapRef = useCallback(node => {
+		node && setMapContainer(node)
+	}, [])
 
 	return (
 		<Box height='100%' sx={sx}>
-			{isLoaded && (
-				<GoogleMap
-					mapContainerStyle={{
-						width: '100%',
-						height: '100%',
-					}}
-					options={{
-						fullscreenControl: false,
-						streetViewControl: false,
-						mapTypeControl: false,
-					}}
-				>
-					<DirectionsService
-						options={{
-							origin: start,
-							destination: end,
-							travelMode: google.maps.TravelMode.DRIVING,
-						}}
-						callback={directionsCallback}
-					/>
-					{directions && (
-						<DirectionsRenderer
-							options={{
-								directions: directions,
-							}}
-						/>
-					)}
-				</GoogleMap>
-			)}
+			<GoogleMapProvider
+				googleMapsAPIKey={process.env.REACT_APP_GOOGLE_MAPS_KEY ?? ''}
+				mapContainer={mapContainer}
+				options={{
+					// center: {lat: -34.397, lng: 150.644},
+					zoom: 8,
+				}}
+				onLoad={map => map.setZoom(4)}
+			>
+				<MapCanvas ref={mapRef} />
+				{start && end && <PlotRoute start={start} end={end} />}
+			</GoogleMapProvider>
 		</Box>
 	)
 }
 
-export default React.memo(Map)
+function PlotRoute(props: { start: string; end: string }): React.ReactElement {
+	const { start, end } = props
+	const { map } = useGoogleMap()
+	const {
+		directionsService,
+		findRoute,
+		findAndRenderRoute,
+		renderRouteOfIndex,
+	} = useDirections({
+		renderOnMap: true,
+		renderOptions: {},
+	})
+
+	if (findAndRenderRoute)
+		findAndRenderRoute({
+			origin: start,
+			destination: end,
+			travelMode: google.maps.TravelMode.DRIVING,
+		}).then(r => {
+			console.log(r)
+		})
+
+	return <></>
+}
+
+export default Map
+// export default React.memo(Map)
