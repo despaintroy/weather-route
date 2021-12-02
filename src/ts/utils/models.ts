@@ -45,9 +45,14 @@ export interface LatLong {
 	lon: number
 }
 
-export interface SavedRoute {
+export interface BeginEnd {
+	beginLocation: LatLong
+	endLocation: LatLong
+	beginAddress?: string
+	endAddress?: string
+}
+
+export interface SavedRoute extends BeginEnd {
 	id: string
 	name: string
-	begin: LatLong
-	end: LatLong
 }

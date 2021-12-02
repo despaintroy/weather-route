@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { deleteSavedRoute } from 'ts/services/savedRoutes'
+import { round } from 'ts/utils/helpers'
 import { SavedRoute } from 'ts/utils/models'
 
 import {
@@ -56,10 +57,22 @@ export default function SavedRouteListItem(
 					<ListItemText
 						primary={route.name}
 						secondary={
-							<span>
-								{route.begin.lat}º, {route.begin.lon}º &rarr; {route.end.lat}º,{' '}
-								{route.end.lon}º
-							</span>
+							<>
+								<span style={{ display: 'block' }}>
+									{route.beginAddress
+										? route.beginAddress.replace(', USA', '')
+										: `${round(route.beginLocation.lat)}º, ${round(
+												route.beginLocation.lon
+										)}º`}
+								</span>
+								<span style={{ display: 'block' }}>
+									{route.endAddress
+										? route.endAddress.replace(', USA', '')
+										: `${round(route.endLocation.lat)}º, ${round(
+												route.endLocation.lon
+										)}º`}
+								</span>
+							</>
 						}
 					/>
 				</ListItemButton>

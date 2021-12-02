@@ -4,6 +4,7 @@ import Map from 'ts/components/Map'
 import { getMessage } from 'ts/services/errors'
 import { newSavedRoute } from 'ts/services/savedRoutes'
 import { beforeSubmit, handleValueChange, validateForm } from 'ts/utils/helpers'
+import { BeginEnd } from 'ts/utils/models'
 
 import { Alert, Stack, TextField } from '@mui/material'
 import { Box } from '@mui/system'
@@ -22,16 +23,17 @@ export default function NewSavedRouteForm(
 ): React.ReactElement {
 	const { setSubmitting, submitCallback } = props
 	const [formState, setFormState] = React.useState(getInitialFormState())
-	const [waypoints, setWaypoints] =
-		React.useState<{ start: string; end: string }>()
+	const [directionsQuery, setDirectionsQuery] = React.useState({
+		start: '',
+		end: '',
+	})
+	const [beginEndResult, setBeginEndResult] = React.useState<BeginEnd>()
 
-	function updateWaypoints() {
-		formState.values.start &&
-			formState.values.end &&
-			setWaypoints({
-				start: formState.values.start.toString(),
-				end: formState.values.end.toString(),
-			})
+	function updateWaypoints(): void {
+		setDirectionsQuery({
+			start: formState.values.start,
+			end: formState.values.end,
+		})
 	}
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
@@ -39,19 +41,18 @@ export default function NewSavedRouteForm(
 
 		setFormState(state => beforeSubmit(state))
 		if (!formState.formValid) return
+		if (!beginEndResult) {
+			setFormState(state => {
+				return { ...state, formMessage: 'No route found' }
+			})
+			return
+		}
 
 		setSubmitting(true)
 
 		newSavedRoute({
 			name: formState.values.name,
-			begin: {
-				lat: parseInt(formState.values.start),
-				lon: parseInt(formState.values.start),
-			},
-			end: {
-				lat: parseInt(formState.values.end),
-				lon: parseInt(formState.values.end),
-			},
+			...beginEndResult,
 		})
 			.then(() => {
 				submitCallback()
@@ -130,10 +131,14 @@ export default function NewSavedRouteForm(
 				)}
 			</Box>
 
-			{waypoints && (
+			{directionsQuery?.start && directionsQuery?.end && (
 				<Map
-					start={waypoints.start}
-					end={waypoints.end}
+					start={directionsQuery.start}
+					end={directionsQuery.end}
+					beginEndCallback={beginEnd => {
+						console.log(beginEnd)
+						setBeginEndResult(beginEnd)
+					}}
 					sx={{ height: '20rem' }}
 				/>
 			)}

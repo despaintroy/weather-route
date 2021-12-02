@@ -1,5 +1,16 @@
 import { FormState } from 'ts/utils/models'
 
+/* --------------------------------------
+							NUMBERS
+-------------------------------------- */
+
+export const round = (num: number, decimals = 3): number => {
+	return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
+}
+
+/* --------------------------------------
+							FORM STATE
+-------------------------------------- */
 export function newFormState<FieldNames extends string>(
 	fields: readonly FieldNames[]
 ): FormState<FieldNames> {
