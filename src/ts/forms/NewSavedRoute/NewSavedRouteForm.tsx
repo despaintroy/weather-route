@@ -4,7 +4,7 @@ import Map from 'ts/components/Map'
 import { getMessage } from 'ts/services/errors'
 import { newSavedRoute } from 'ts/services/savedRoutes'
 import { beforeSubmit, handleValueChange, validateForm } from 'ts/utils/helpers'
-import { BeginEnd } from 'ts/utils/models'
+import { BeginEnd, DirectionsQuery } from 'ts/utils/models'
 
 import { Alert, Stack, TextField } from '@mui/material'
 import { Box } from '@mui/system'
@@ -23,11 +23,9 @@ export default function NewSavedRouteForm(
 ): React.ReactElement {
 	const { setSubmitting, submitCallback } = props
 	const [formState, setFormState] = React.useState(getInitialFormState())
-	const [directionsQuery, setDirectionsQuery] = React.useState({
-		start: '',
-		end: '',
-	})
-	const [beginEndResult, setBeginEndResult] = React.useState<BeginEnd>()
+	const [directionsQuery, setDirectionsQuery] =
+		React.useState<DirectionsQuery>()
+	const [beginEndResult, setBeginEndResult] = React.useState<BeginEnd | null>()
 
 	function updateWaypoints(): void {
 		setDirectionsQuery({
@@ -131,14 +129,10 @@ export default function NewSavedRouteForm(
 				)}
 			</Box>
 
-			{directionsQuery?.start && directionsQuery?.end && (
+			{directionsQuery?.start && directionsQuery.end && (
 				<Map
-					start={directionsQuery.start}
-					end={directionsQuery.end}
-					beginEndCallback={beginEnd => {
-						console.log(beginEnd)
-						setBeginEndResult(beginEnd)
-					}}
+					directionsQuery={directionsQuery}
+					beginEndCallback={(beginEnd): void => setBeginEndResult(beginEnd)}
 					sx={{ height: '20rem' }}
 				/>
 			)}

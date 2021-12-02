@@ -1,12 +1,11 @@
 import React, { LegacyRef, useCallback, useEffect, useState } from 'react'
 
-import { BeginEnd } from 'ts/utils/models'
+import { BeginEnd, DirectionsQuery } from 'ts/utils/models'
 
 import { Box, SxProps } from '@mui/system'
 import {
 	GoogleMapProvider,
 	useDirections,
-	useGoogleMap,
 } from '@ubilabs/google-maps-react-hooks'
 
 const MapCanvas = React.forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
@@ -15,14 +14,13 @@ const MapCanvas = React.forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
 MapCanvas.displayName = 'MapCanvas'
 
 export type MapProps = {
-	start: string
-	end: string
-	beginEndCallback?: (beginEnd: BeginEnd) => void
+	directionsQuery: DirectionsQuery
+	beginEndCallback?: (beginEnd: BeginEnd | null) => void
 	sx?: SxProps
 }
 
 function Map(props: MapProps): React.ReactElement {
-	const { start, end, beginEndCallback, sx } = props
+	const { directionsQuery, beginEndCallback, sx } = props
 	const [mapContainer, setMapContainer] = useState(null)
 	const mapRef = useCallback(node => {
 		node && setMapContainer(node)
@@ -44,59 +42,63 @@ function Map(props: MapProps): React.ReactElement {
 				onLoad={(map): void => map.setZoom(4)}
 			>
 				<MapCanvas ref={mapRef} />
-				{start && end && (
-					<PlotRoute
-						start={start}
-						end={end}
-						beginEndCallback={beginEndCallback}
-					/>
-				)}
+				<PlotRoute
+					directionsQuery={directionsQuery}
+					beginEndCallback={beginEndCallback}
+				/>
 			</GoogleMapProvider>
 		</Box>
 	)
 }
 
 function PlotRoute(props: {
-	start: string
-	end: string
-	beginEndCallback?: (beginEnd: BeginEnd) => void
+	directionsQuery: DirectionsQuery
+	beginEndCallback?: (beginEnd: BeginEnd | null) => void
 }): React.ReactElement {
-	const { start, end, beginEndCallback } = props
-	const { map } = useGoogleMap()
+	const { directionsQuery, beginEndCallback } = props
+	// const { map } = useGoogleMap()
 	const {
-		directionsService,
-		findRoute,
+		// directionsService,
+		// findRoute,
 		findAndRenderRoute,
-		renderRouteOfIndex,
+		// renderRouteOfIndex,
 	} = useDirections({
 		renderOnMap: true,
 		renderOptions: {},
 	})
 
+	console.log(directionsQuery, findAndRenderRoute)
+
 	useEffect(() => {
-		if (findAndRenderRoute)
+		if (findAndRenderRoute && directionsQuery.start && directionsQuery.end) {
 			findAndRenderRoute({
-				origin: start,
-				destination: end,
+				origin: directionsQuery.start,
+				destination: directionsQuery.end,
 				travelMode: google.maps.TravelMode.DRIVING,
-			}).then(r => {
-				const route = r.routes[0]
-				console.log(route)
-				if (beginEndCallback)
-					beginEndCallback({
-						beginLocation: {
-							lat: route.legs[0].start_location.lat(),
-							lon: route.legs[0].start_location.lng(),
-						},
-						endLocation: {
-							lat: route.legs[0].end_location.lat(),
-							lon: route.legs[0].end_location.lng(),
-						},
-						beginAddress: route.legs[0].start_address,
-						endAddress: route.legs[0].end_address,
-					})
 			})
-	}, [start, end])
+				.then(r => {
+					console.log(r.routes[0])
+					const leg = r.routes[0].legs[0]
+					if (beginEndCallback)
+						beginEndCallback({
+							beginLocation: {
+								lat: leg.start_location.lat(),
+								lon: leg.start_location.lng(),
+							},
+							endLocation: {
+								lat: leg.end_location.lat(),
+								lon: leg.end_location.lng(),
+							},
+							beginAddress: leg.start_address,
+							endAddress: leg.end_address,
+						})
+				})
+				.catch(e => {
+					beginEndCallback && beginEndCallback(null)
+					console.error('Error finding route:', e)
+				})
+		}
+	}, [directionsQuery, findAndRenderRoute])
 
 	return <></>
 }

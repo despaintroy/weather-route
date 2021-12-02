@@ -45,6 +45,11 @@ export interface LatLong {
 	lon: number
 }
 
+export interface DirectionsQuery {
+	start: string
+	end: string
+}
+
 export interface BeginEnd {
 	beginLocation: LatLong
 	endLocation: LatLong

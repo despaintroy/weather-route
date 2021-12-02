@@ -63,14 +63,14 @@ export default function SavedRouteListItem(
 										? route.beginAddress.replace(', USA', '')
 										: `${round(route.beginLocation.lat)}º, ${round(
 												route.beginLocation.lon
-										)}º`}
+											)}º`}
 								</span>
 								<span style={{ display: 'block' }}>
 									{route.endAddress
 										? route.endAddress.replace(', USA', '')
 										: `${round(route.endLocation.lat)}º, ${round(
 												route.endLocation.lon
-										)}º`}
+											)}º`}
 								</span>
 							</>
 						}
