@@ -1,6 +1,16 @@
-import React, { Context, useState } from 'react'
+import React, {
+	Context,
+	createContext,
+	useCallback,
+	useState,
+} from 'react'
 
-import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
+import {
+	HashRouter,
+	Redirect,
+	Route,
+	Switch,
+} from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
 import Home from 'ts/containers/Home'
 import Profile from 'ts/containers/Profile'
@@ -12,9 +22,15 @@ import { drawerWidth } from 'ts/utils/constants'
 import { User } from 'ts/utils/models'
 import Paths from 'ts/utils/paths'
 
-import { Box, Stack, Toolbar } from '@mui/material'
+import {
+	Box,
+	Stack,
+	Toolbar,
+} from '@mui/material'
+import { GoogleMapProvider } from '@ubilabs/google-maps-react-hooks'
 
 export let UserContext: Context<{ user: User; updateUser: () => void }>
+export const MapContext = createContext<((node: any)=>void) | null>(null)
 
 function App(props: { user: User }): React.ReactElement {
 	const [user, setUser] = useState(props.user)
@@ -24,10 +40,29 @@ function App(props: { user: User }): React.ReactElement {
 		newUser && setUser(newUser)
 	}
 
+	const [mapContainer, setMapContainer] = useState(null)
+	const mapRef = useCallback(node => {
+		node && setMapContainer(node)
+	}, [])
+
 	UserContext = React.createContext({ user, updateUser })
 
 	return (
 		<UserContext.Provider value={{ user, updateUser }}>
+			<MapContext.Provider value={mapRef}>
+			<GoogleMapProvider
+				googleMapsAPIKey={process.env.REACT_APP_GOOGLE_MAPS_KEY ?? ''}
+				mapContainer={mapContainer}
+				options={{
+					// center: {lat: -34.397, lng: 150.644},
+					zoom: 8,
+					fullscreenControl: false,
+					streetViewControl: false,
+					zoomControl: false,
+					mapTypeControl: false,
+				}}
+				onLoad={(map) => map.setZoom(4)}
+			>
 			<Box sx={{ display: 'flex', height: '100vh' }}>
 				<HashRouter basename='/'>
 					<Navigation />
@@ -57,6 +92,8 @@ function App(props: { user: User }): React.ReactElement {
 					</Box>
 				</HashRouter>
 			</Box>
+			</GoogleMapProvider>
+			</MapContext.Provider>
 		</UserContext.Provider>
 	)
 }

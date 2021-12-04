@@ -1,17 +1,15 @@
-import React, { LegacyRef, useCallback, useEffect, useState } from 'react'
+import React, {
+	LegacyRef,
+	useEffect,
+} from 'react'
 
-import { BeginEnd, DirectionsQuery } from 'ts/utils/models'
-
-import { Box, SxProps } from '@mui/system'
 import {
-	GoogleMapProvider,
-	useDirections,
-} from '@ubilabs/google-maps-react-hooks'
+	BeginEnd,
+	DirectionsQuery,
+} from 'ts/utils/models'
 
-const MapCanvas = React.forwardRef((props, ref: LegacyRef<HTMLDivElement>) => (
-	<div ref={ref} style={{ height: '100%' }} />
-))
-MapCanvas.displayName = 'MapCanvas'
+import { SxProps } from '@mui/system'
+import { useDirections } from '@ubilabs/google-maps-react-hooks'
 
 export type MapProps = {
 	directionsQuery: DirectionsQuery
@@ -19,37 +17,28 @@ export type MapProps = {
 	sx?: SxProps
 }
 
-function Map(props: MapProps): React.ReactElement {
-	const { directionsQuery, beginEndCallback, sx } = props
-	const [mapContainer, setMapContainer] = useState(null)
-	const mapRef = useCallback(node => {
-		node && setMapContainer(node)
-	}, [])
+const Map = React.forwardRef((
+	props, 
+	ref: LegacyRef<HTMLDivElement>
+	) => {
+	return <div ref={ref} style={{ height: '100%' }} />
+})
+// Map.displayName = 'Map'
 
-	return (
-		<Box height='100%' sx={sx}>
-			<GoogleMapProvider
-				googleMapsAPIKey={process.env.REACT_APP_GOOGLE_MAPS_KEY ?? ''}
-				mapContainer={mapContainer}
-				options={{
-					// center: {lat: -34.397, lng: 150.644},
-					zoom: 8,
-					fullscreenControl: false,
-					streetViewControl: false,
-					zoomControl: false,
-					mapTypeControl: false,
-				}}
-				onLoad={(map): void => map.setZoom(4)}
-			>
-				<MapCanvas ref={mapRef} />
-				<PlotRoute
-					directionsQuery={directionsQuery}
-					beginEndCallback={beginEndCallback}
-				/>
-			</GoogleMapProvider>
-		</Box>
-	)
-}
+// function Map(props: MapProps): React.ReactElement {
+// 	const { directionsQuery, beginEndCallback, sx } = props
+// 	const { map } = useGoogleMap()
+
+// 	return (
+// 		<Box height='100%' sx={sx}>
+// 			<MapCanvas ref={mapRef} />
+// 			{/* <PlotRoute
+// 				directionsQuery={directionsQuery}
+// 				beginEndCallback={beginEndCallback}
+// 			/> */}
+// 		</Box>
+// 	)
+// }
 
 function PlotRoute(props: {
 	directionsQuery: DirectionsQuery

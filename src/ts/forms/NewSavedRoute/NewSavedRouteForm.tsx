@@ -1,12 +1,22 @@
 import React from 'react'
 
-import Map from 'ts/components/Map'
 import { getMessage } from 'ts/services/errors'
 import { newSavedRoute } from 'ts/services/savedRoutes'
-import { beforeSubmit, handleValueChange, validateForm } from 'ts/utils/helpers'
-import { BeginEnd, DirectionsQuery } from 'ts/utils/models'
+import {
+	beforeSubmit,
+	handleValueChange,
+	validateForm,
+} from 'ts/utils/helpers'
+import {
+	BeginEnd,
+	DirectionsQuery,
+} from 'ts/utils/models'
 
-import { Alert, Stack, TextField } from '@mui/material'
+import {
+	Alert,
+	Stack,
+	TextField,
+} from '@mui/material'
 import { Box } from '@mui/system'
 
 import { getInitialFormState } from './validation'
@@ -128,14 +138,7 @@ export default function NewSavedRouteForm(
 					</Alert>
 				)}
 			</Box>
-
-			{directionsQuery?.start && directionsQuery.end && (
-				<Map
-					directionsQuery={directionsQuery}
-					beginEndCallback={(beginEnd): void => setBeginEndResult(beginEnd)}
-					sx={{ height: '20rem' }}
-				/>
-			)}
+					<div></div>
 		</Stack>
 	)
 }
