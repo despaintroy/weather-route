@@ -63,7 +63,12 @@ export default function SavedRoutes(): React.ReactElement {
 			<Fab
 				color='primary'
 				onClick={(): void => setShowDialog(true)}
-				sx={{ position: 'fixed', bottom: '2rem', right: '1.5rem' }}
+				sx={{
+					position: 'fixed',
+					bottom: '2rem',
+					right: '1.5rem',
+					zIndex: 1000,
+				}}
 			>
 				<Icon>add</Icon>
 			</Fab>

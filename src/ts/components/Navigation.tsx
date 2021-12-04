@@ -105,6 +105,13 @@ export default function Navigation(): React.ReactElement {
 					<Typography variant='h6' noWrap component='div'>
 						Weather Route
 					</Typography>
+					<IconButton
+						color='inherit'
+						onClick={(): void => location.reload()}
+						sx={{ marginLeft: 'auto' }}
+					>
+						<Icon>map</Icon>
+					</IconButton>
 				</Toolbar>
 			</AppBar>
 			<Box

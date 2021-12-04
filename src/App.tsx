@@ -2,6 +2,7 @@ import React, { Context, useState } from 'react'
 
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
+import DisplayRoute from 'ts/containers/DisplayRoute'
 import Home from 'ts/containers/Home'
 import Profile from 'ts/containers/Profile'
 import SavedRoutes from 'ts/containers/SavedRoutes'
@@ -44,6 +45,11 @@ function App(props: { user: User }): React.ReactElement {
 							<Switch>
 								<Route exact path={Paths.home} component={Home} />
 								<Route exact path={Paths.savedRoutes} component={SavedRoutes} />
+								<Route
+									exact
+									path={Paths.displayRoute}
+									component={DisplayRoute}
+								/>
 								<Route exact path={Paths.weather} component={Weather} />
 								<Route exact path={Paths.profile} component={Profile} />
 								<Route exact path={Paths.security} component={Security} />

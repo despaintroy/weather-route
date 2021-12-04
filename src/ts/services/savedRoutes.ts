@@ -1,4 +1,11 @@
-import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore'
+import {
+	collection,
+	deleteDoc,
+	doc,
+	getDoc,
+	getDocs,
+	setDoc,
+} from 'firebase/firestore'
 import { SavedRoute } from 'ts/utils/models'
 
 import { database } from './firebase'
@@ -27,6 +34,15 @@ export const getSavedRoutes = (): Promise<SavedRoute[]> => {
 			r.forEach(doc => routes.push({ ...doc.data(), id: doc.id } as SavedRoute))
 			return Promise.resolve(routes)
 		})
+		.catch(() => Promise.reject())
+}
+
+export const getSavedRoute = (id: string): Promise<SavedRoute> => {
+	const user = getUser()
+	if (!user) return Promise.reject()
+
+	return getDoc(doc(database, user.id, id))
+		.then(r => Promise.resolve(r.data() as SavedRoute))
 		.catch(() => Promise.reject())
 }
 

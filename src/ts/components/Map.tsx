@@ -16,6 +16,7 @@ MapCanvas.displayName = 'MapCanvas'
 export type MapProps = {
 	directionsQuery: DirectionsQuery
 	beginEndCallback?: (beginEnd: BeginEnd | null) => void
+	legCallback?: (leg: google.maps.DirectionsLeg | null) => void
 	sx?: SxProps
 }
 
@@ -45,6 +46,7 @@ function Map(props: MapProps): React.ReactElement {
 				<PlotRoute
 					directionsQuery={directionsQuery}
 					beginEndCallback={beginEndCallback}
+					legCallback={props.legCallback}
 				/>
 			</GoogleMapProvider>
 		</Box>
@@ -54,8 +56,9 @@ function Map(props: MapProps): React.ReactElement {
 function PlotRoute(props: {
 	directionsQuery: DirectionsQuery
 	beginEndCallback?: (beginEnd: BeginEnd | null) => void
+	legCallback?: (leg: google.maps.DirectionsLeg | null) => void
 }): React.ReactElement {
-	const { directionsQuery, beginEndCallback } = props
+	const { directionsQuery, beginEndCallback, legCallback } = props
 	// const { map } = useGoogleMap()
 	const {
 		// directionsService,
@@ -67,8 +70,6 @@ function PlotRoute(props: {
 		renderOptions: {},
 	})
 
-	console.log(directionsQuery, findAndRenderRoute)
-
 	useEffect(() => {
 		if (findAndRenderRoute && directionsQuery.start && directionsQuery.end) {
 			findAndRenderRoute({
@@ -77,7 +78,6 @@ function PlotRoute(props: {
 				travelMode: google.maps.TravelMode.DRIVING,
 			})
 				.then(r => {
-					console.log(r.routes[0])
 					const leg = r.routes[0].legs[0]
 					if (beginEndCallback)
 						beginEndCallback({
@@ -92,13 +92,14 @@ function PlotRoute(props: {
 							beginAddress: leg.start_address,
 							endAddress: leg.end_address,
 						})
+					if (legCallback) legCallback(leg)
 				})
 				.catch(e => {
 					beginEndCallback && beginEndCallback(null)
 					console.error('Error finding route:', e)
 				})
 		}
-	}, [directionsQuery, findAndRenderRoute])
+	}, [directionsQuery.start, directionsQuery.end, findAndRenderRoute])
 
 	return <></>
 }

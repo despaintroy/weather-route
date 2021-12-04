@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 
+import { Link } from 'react-router-dom'
 import { deleteSavedRoute } from 'ts/services/savedRoutes'
 import { round } from 'ts/utils/helpers'
 import { SavedRoute } from 'ts/utils/models'
+import Paths from 'ts/utils/paths'
 
 import {
 	Icon,
@@ -44,6 +46,9 @@ export default function SavedRouteListItem(
 		<>
 			<ListItem
 				disablePadding
+				button
+				component={Link}
+				to={Paths.getDisplayRouteLink(route.id)}
 				secondaryAction={
 					<IconButton onClick={handleClick}>
 						<Icon>more_vert</Icon>
@@ -63,14 +68,14 @@ export default function SavedRouteListItem(
 										? route.beginAddress.replace(', USA', '')
 										: `${round(route.beginLocation.lat)}º, ${round(
 												route.beginLocation.lon
-											)}º`}
+										)}º`}
 								</span>
 								<span style={{ display: 'block' }}>
 									{route.endAddress
 										? route.endAddress.replace(', USA', '')
 										: `${round(route.endLocation.lat)}º, ${round(
 												route.endLocation.lon
-											)}º`}
+										)}º`}
 								</span>
 							</>
 						}
