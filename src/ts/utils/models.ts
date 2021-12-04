@@ -40,7 +40,7 @@ export interface Weather {
 	current: CurrentWeather
 }
 
-export interface LatLong {
+export interface LatLon {
 	lat: number
 	lon: number
 }
@@ -51,8 +51,8 @@ export interface DirectionsQuery {
 }
 
 export interface BeginEnd {
-	beginLocation: LatLong
-	endLocation: LatLong
+	beginLocation: LatLon
+	endLocation: LatLon
 	beginAddress?: string
 	endAddress?: string
 }
@@ -60,4 +60,13 @@ export interface BeginEnd {
 export interface SavedRoute extends BeginEnd {
 	id: string
 	name: string
+}
+
+export interface TimePoint {
+	time: number
+	point: LatLon
+}
+
+export interface TimePointWeather extends TimePoint {
+	weather: CurrentWeather
 }
