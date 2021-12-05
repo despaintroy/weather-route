@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 import { deleteSavedRoute } from 'ts/services/savedRoutes'
-import { round } from 'ts/utils/helpers'
+import {
+	round,
+	stripUSA,
+} from 'ts/utils/helpers'
 import { SavedRoute } from 'ts/utils/models'
 import Paths from 'ts/utils/paths'
 
@@ -46,16 +49,16 @@ export default function SavedRouteListItem(
 		<>
 			<ListItem
 				disablePadding
-				button
-				component={Link}
-				to={Paths.getDisplayRouteLink(route.id)}
 				secondaryAction={
 					<IconButton onClick={handleClick}>
 						<Icon>more_vert</Icon>
 					</IconButton>
 				}
 			>
-				<ListItemButton>
+				<ListItemButton
+					component={Link}
+					to={Paths.getDisplayRouteLink(route.id)}
+				>
 					<ListItemIcon>
 						<Icon>directions</Icon>
 					</ListItemIcon>
@@ -65,14 +68,14 @@ export default function SavedRouteListItem(
 							<>
 								<span style={{ display: 'block' }}>
 									{route.beginAddress
-										? route.beginAddress.replace(', USA', '')
+										? stripUSA(route.beginAddress)
 										: `${round(route.beginLocation.lat)}º, ${round(
 												route.beginLocation.lon
 										)}º`}
 								</span>
 								<span style={{ display: 'block' }}>
 									{route.endAddress
-										? route.endAddress.replace(', USA', '')
+										? stripUSA(route.endAddress)
 										: `${round(route.endLocation.lat)}º, ${round(
 												route.endLocation.lon
 										)}º`}

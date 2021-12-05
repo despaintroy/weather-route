@@ -37,8 +37,10 @@ export function getTimePoints(leg: google.maps.DirectionsLeg): TimePoint[] {
  */
 export function reduceTimePoints(
 	timePoints: TimePoint[],
-	interval: number
+	maxPoints = 5
 ): TimePoint[] {
+	const interval =
+		Math.min(timePoints[timePoints.length - 1].time, 172800) / maxPoints
 	const reducedTimePoints: TimePoint[] = []
 	for (
 		let targetTime = 0;
@@ -88,7 +90,6 @@ export async function getTimePointWeather(
 		const hour = Math.round(timePoint.time / 3600)
 		if (hour > 47) break
 
-		console.log(weather)
 		timePointWeather.push({
 			...timePoint,
 			weather: weather.hourly[hour],

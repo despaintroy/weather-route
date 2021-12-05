@@ -1,12 +1,28 @@
 import { FormState } from 'ts/utils/models'
 
 /* --------------------------------------
-							NUMBERS
+							VALUES
 -------------------------------------- */
 
 export const round = (num: number, decimals = 3): number => {
 	return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
 }
+
+// Format date to hh:mm a
+export const formatTime = (dateTime: Date): string => {
+	const hours = dateTime.getHours()
+	const minutes =
+		dateTime.getMinutes() < 10
+			? `0${dateTime.getMinutes()}`
+			: dateTime.getMinutes()
+	const ampm = hours >= 12 ? 'pm' : 'am'
+	const hour = hours % 12 === 0 ? 12 : hours % 12
+
+	return `${hour}:${minutes} ${ampm}`
+}
+
+export const stripUSA = (address: string): string =>
+	address.replace(', USA', '')
 
 /* --------------------------------------
 							FORM STATE

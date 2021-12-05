@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import { formatTime } from 'ts/utils/helpers'
 import { TimePointWeather } from 'ts/utils/models'
 
 import {
@@ -29,17 +30,15 @@ export default function RouteWeather(props: {
 
 	useEffect(() => {
 		if (leg) {
-			const timePoints = reduceTimePoints(getTimePoints(leg), 900)
+			const timePoints = reduceTimePoints(getTimePoints(leg), 8)
 			getTimePointWeather(timePoints, setWeatherLoadProgress).then(arr => {
 				setTimePointWeather(arr)
 			})
 		}
 	}, [leg])
 
-	function timeString(secondsOffset: number): string {
-		return new Date(
-			new Date().getTime() + secondsOffset * 1000
-		).toLocaleTimeString()
+	function createJsDate(secondsOffset: number): Date {
+		return new Date(new Date().getTime() + secondsOffset * 1000)
 	}
 
 	if (!timePointWeather) {
@@ -66,7 +65,7 @@ export default function RouteWeather(props: {
 							key={i}
 							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 						>
-							<TableCell>{timeString(weather.time)}</TableCell>
+							<TableCell>{formatTime(createJsDate(weather.time))}</TableCell>
 							<TableCell>{Math.round(weather.weather.temp)}º</TableCell>
 							<TableCell>{Math.round(weather.weather.pop * 100)}%</TableCell>
 							<TableCell>{weather.weather.clouds}%</TableCell>

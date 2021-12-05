@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import InfoPiece from 'ts/components/InfoPiece'
 import Map from 'ts/components/Map'
 import { getSavedRoute } from 'ts/services/savedRoutes'
+import { stripUSA } from 'ts/utils/helpers'
 import { SavedRoute } from 'ts/utils/models'
 
 import { CircularProgress, Container, Typography } from '@mui/material'
@@ -29,12 +30,9 @@ export default function DisplayRoute(): React.ReactElement {
 
 	return (
 		<Container sx={{ maxWidth: '100vw' }}>
-			<Typography variant='h1'>Route</Typography>
-			<Typography variant='h2' sx={{ mb: 3 }}>
-				{route.name}
-			</Typography>
-			<InfoPiece label='Begin'>{route.beginAddress}</InfoPiece>
-			<InfoPiece label='End'>{route.endAddress}</InfoPiece>
+			<Typography variant='h1'>{route.name}</Typography>
+			<InfoPiece label='Begin'>{stripUSA(route.beginAddress ?? '')}</InfoPiece>
+			<InfoPiece label='End'>{stripUSA(route.endAddress ?? '')}</InfoPiece>
 			{leg && (
 				<>
 					<InfoPiece label='Duration'>{leg.duration?.text}</InfoPiece>

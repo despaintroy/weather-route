@@ -43,14 +43,16 @@ export default function SavedRoutes(): React.ReactElement {
 
 		return (
 			<List>
-				{savedRoutes.map(route => (
-					<div key={route.id}>
-						<SavedRouteListItem
-							route={route}
-							changeCallback={updateSavedRoutes}
-						/>
-					</div>
-				))}
+				{savedRoutes
+					.sort((a, b) => (a.name < b.name ? -1 : 1))
+					.map(route => (
+						<div key={route.id}>
+							<SavedRouteListItem
+								route={route}
+								changeCallback={updateSavedRoutes}
+							/>
+						</div>
+					))}
 			</List>
 		)
 	}
