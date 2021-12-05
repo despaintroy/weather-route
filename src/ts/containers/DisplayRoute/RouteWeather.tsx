@@ -1,56 +1,79 @@
 import React, { useEffect } from 'react'
 
-import { getWeather } from 'ts/services/weather'
-import { TimePoint, TimePointWeather } from 'ts/utils/models'
+import { TimePointWeather } from 'ts/utils/models'
 
-import { LinearProgress } from '@mui/material'
+import {
+	LinearProgress,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+} from '@mui/material'
 
-import { getTimePoints, reduceTimePoints } from './displayRouteHelpers'
+import {
+	getTimePoints,
+	getTimePointWeather,
+	reduceTimePoints,
+} from './displayRouteHelpers'
 
 export default function RouteWeather(props: {
 	leg: google.maps.DirectionsLeg | null
 }): React.ReactElement {
 	const { leg } = props
 	const [weatherLoadProgress, setWeatherLoadProgress] = React.useState(0)
-	const [weatherArr, setWeatherArr] = React.useState<TimePointWeather[]>([])
+	const [timePointWeather, setTimePointWeather] =
+		React.useState<TimePointWeather[]>()
 
 	useEffect(() => {
 		if (leg) {
 			const timePoints = reduceTimePoints(getTimePoints(leg), 900)
-			getTimePointWeather(timePoints).then(arr => {
-				setWeatherArr(arr)
+			getTimePointWeather(timePoints, setWeatherLoadProgress).then(arr => {
+				setTimePointWeather(arr)
 			})
 		}
 	}, [leg])
 
-	// Given an array of TimePoints, return an array of TimePointWeathr objects, getting the weather for each TimePoint
-	async function getTimePointWeather(
-		timePoints: TimePoint[]
-	): Promise<TimePointWeather[]> {
-		const timePointWeather: TimePointWeather[] = []
-		for (const timePoint of timePoints) {
-			const weather = await getWeather(timePoint.point.lat, timePoint.point.lon)
-			timePointWeather.push({
-				...timePoint,
-				weather: weather.current,
-			})
-			setWeatherLoadProgress(p => p + 100 / timePoints.length)
-		}
-		setWeatherLoadProgress(100)
-		return timePointWeather
+	function timeString(secondsOffset: number): string {
+		return new Date(
+			new Date().getTime() + secondsOffset * 1000
+		).toLocaleTimeString()
 	}
 
-	if (weatherLoadProgress !== 100) {
+	if (!timePointWeather) {
 		return <LinearProgress variant='determinate' value={weatherLoadProgress} />
 	}
 
 	return (
-		<>
-			{weatherArr.map((weather, i) => (
-				<p key={i}>
-					Time: {weather.time}, Temp: {weather.weather.temp}
-				</p>
-			))}
-		</>
+		<TableContainer
+			component={Paper}
+			sx={{ maxWidth: '100%', overflow: 'scroll' }}
+		>
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell>Time</TableCell>
+						<TableCell>Temp.</TableCell>
+						<TableCell>Precip.</TableCell>
+						<TableCell>Clouds</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{timePointWeather.map((weather, i) => (
+						<TableRow
+							key={i}
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell>{timeString(weather.time)}</TableCell>
+							<TableCell>{Math.round(weather.weather.temp)}º</TableCell>
+							<TableCell>{Math.round(weather.weather.pop * 100)}%</TableCell>
+							<TableCell>{weather.weather.clouds}%</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
 	)
 }

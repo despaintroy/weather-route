@@ -28,7 +28,7 @@ export default function DisplayRoute(): React.ReactElement {
 	}
 
 	return (
-		<Container>
+		<Container sx={{ maxWidth: '100vw' }}>
 			<Typography variant='h1'>Route</Typography>
 			<Typography variant='h2' sx={{ mb: 3 }}>
 				{route.name}

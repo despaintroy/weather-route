@@ -1,4 +1,5 @@
-import { TimePoint } from 'ts/utils/models'
+import { getWeather } from 'ts/services/weather'
+import { TimePoint, TimePointWeather } from 'ts/utils/models'
 
 /**
  *
@@ -72,4 +73,27 @@ export function reduceTimePoints(
 		}
 	}
 	return reducedTimePoints
+}
+
+// Given an array of TimePoints, return an array of TimePointWeathr objects, getting the weather for each TimePoint
+export async function getTimePointWeather(
+	timePoints: TimePoint[],
+	updateLoading?: (percentage: number | ((previous: number) => number)) => void
+): Promise<TimePointWeather[]> {
+	const timePointWeather: TimePointWeather[] = []
+
+	for (const timePoint of timePoints) {
+		updateLoading && updateLoading(p => p + 100 / timePoints.length)
+		const weather = await getWeather(timePoint.point.lat, timePoint.point.lon)
+		const hour = Math.round(timePoint.time / 3600)
+		if (hour > 47) break
+
+		console.log(weather)
+		timePointWeather.push({
+			...timePoint,
+			weather: weather.hourly[hour],
+		})
+	}
+	updateLoading && updateLoading(100)
+	return timePointWeather
 }

@@ -20,24 +20,30 @@ export interface FormState<FieldNames extends string> {
 	attemptedSubmit: boolean
 }
 
-export interface CurrentWeather {
+export interface CurrentWeather extends HourlyWeather {
+	sunrise: number
+	sunset: number
+}
+
+export interface HourlyWeather {
 	clouds: number
 	dew_point: number
 	dt: number
 	feels_like: number
 	humidity: number
 	pressure: number
-	sunrise: number
-	sunset: number
 	temp: number
 	uvi: number
 	visibility: number
 	wind_deg: number
+	wind_gust: number
 	wind_speed: number
+	pop: number
 }
 
 export interface Weather {
 	current: CurrentWeather
+	hourly: HourlyWeather[]
 }
 
 export interface LatLon {
@@ -65,8 +71,9 @@ export interface SavedRoute extends BeginEnd {
 export interface TimePoint {
 	time: number
 	point: LatLon
+	address?: string
 }
 
 export interface TimePointWeather extends TimePoint {
-	weather: CurrentWeather
+	weather: HourlyWeather
 }
