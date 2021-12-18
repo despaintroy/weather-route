@@ -2,3 +2,139 @@
 	padding-left: 0 !important;
 	padding-right: 0 !important;
 }
+
+.adContainer {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100%;
+	text-align: left;
+	margin: 0;
+	border: 1px solid black;
+}
+.adContainer .logo {
+	align-self: center;
+	width: 40px;
+	margin: 0 24px;
+	height: 40px;
+}
+.adContainer .logo IMG {
+	height: 40px;
+	width: 40px;
+}
+.adContainer .text {
+	margin: auto auto auto 0;
+}
+.adContainer .button {
+	align-self: center;
+	height: 100%;
+	max-height: 48px;
+	/* This gives a perceived margin of 32px, due to the margins within the button SVGs. */
+	margin-right: 30px;
+}
+.adContainer .button-inner {
+	max-height: 48px;
+	height: 100%;
+}
+.adContainer .button-inner SVG {
+	height: 100%;
+	width: auto;
+}
+.adText {
+	font-family: 'Google Sans', Roboto, Arial, sans-serif;
+	font-size: 18px;
+	font-weight: normal;
+	line-height: 18px;
+	color: #202124;
+	margin-bottom: 4px;
+}
+.areaText {
+	font-family: Roboto, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: medium;
+	line-height: 14px;
+	color: #5f6368;
+}
+.nativeIframeMessage .text {
+	padding: 0 10px;
+}
+
+@media (max-height: 44px), (max-height: 150px) and (max-width: 210px) {
+	.adContainer .logo {
+		display: none;
+	}
+	.adContainer .text {
+		margin-left: 5px;
+	}
+}
+@media (max-height: 110px) and (max-width: 330px) {
+	.adText {
+		font-size: 13px;
+		line-height: 13px;
+		margin-bottom: 2px;
+	}
+	.areaText {
+		font-size: 11px;
+		line-height: 11px;
+	}
+}
+@media (max-height: 38px) {
+	.adText {
+		font-size: 17px;
+		line-height: 17px;
+		margin-bottom: 0;
+	}
+	.areaText {
+		display: none;
+	}
+}
+@media (max-height: 20px) {
+	.adText {
+		font-size: 12px;
+		line-height: 12px;
+		margin-bottom: 0;
+	}
+}
+
+/* Vertically stacked assets in cases where creative is not a distictly
+	 horizontal rectangle shape */
+@media (min-height: 240px),
+	(max-width: 65px) and (min-height: 50px),
+	(max-width: 130px) and (min-height: 100px),
+	(max-width: 195px) and (min-height: 150px),
+	(max-width: 260px) and (min-height: 200px) {
+	.adContainer .logo {
+		display: initial;
+	}
+	.areaText {
+		display: initial;
+	}
+	.adContainer .text {
+		margin-left: 0;
+	}
+	.adContainer {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+	}
+	.adContainer .logo {
+		margin: 40px auto 24px auto;
+	}
+	.adContainer .text {
+		margin: 0 auto auto auto;
+	}
+	.adContainer .text .adText {
+		margin-bottom: 8px;
+	}
+	.adContainer .button {
+		margin: auto auto 32px auto;
+	}
+	@media (max-height: 200px) {
+		.adContainer .logo {
+			display: none;
+		}
+		.adContainer .text {
+			margin: 10px auto auto auto;
+		}
+	}
+}

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { useParams } from 'react-router-dom'
+import AdSense from 'ts/components/AdSense'
 import InfoPiece from 'ts/components/InfoPiece'
 import Map from 'ts/components/Map'
 import { getSavedRoute } from 'ts/services/savedRoutes'
@@ -44,6 +45,8 @@ export default function DisplayRoute(): React.ReactElement {
 				Weather
 			</Typography>
 			<RouteWeather leg={leg} />
+
+			<AdSense />
 
 			<Typography variant='h2' sx={{ mb: 3 }}>
 				Map
