@@ -33,7 +33,7 @@ export default function Navigation(): React.ReactElement {
 	}>
 
 	const mainMenuOptions: menuOptions = [
-		{ title: 'Home', url: Paths.home, icon: 'home' },
+		// { title: 'Home', url: Paths.home, icon: 'home' },
 		{ title: 'Saved Routes', url: Paths.savedRoutes, icon: 'star' },
 		{ title: 'Weather', url: Paths.weather, icon: 'wb_sunny' },
 	]

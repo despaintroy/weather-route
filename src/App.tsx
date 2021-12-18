@@ -3,7 +3,6 @@ import React, { Context, useState } from 'react'
 import { HashRouter, Redirect, Route, Switch } from 'react-router-dom'
 import Navigation from 'ts/components/Navigation'
 import DisplayRoute from 'ts/containers/DisplayRoute'
-import Home from 'ts/containers/Home'
 import Profile from 'ts/containers/Profile'
 import SavedRoutes from 'ts/containers/SavedRoutes'
 import Security from 'ts/containers/Security'
@@ -43,7 +42,7 @@ function App(props: { user: User }): React.ReactElement {
 						<Stack height='100%'>
 							<Toolbar />
 							<Switch>
-								<Route exact path={Paths.home} component={Home} />
+								<Route exact path={Paths.home} component={SavedRoutes} />
 								<Route exact path={Paths.savedRoutes} component={SavedRoutes} />
 								<Route
 									exact
